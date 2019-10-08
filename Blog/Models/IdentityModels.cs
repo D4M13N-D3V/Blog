@@ -50,5 +50,6 @@ namespace Blog.Models
         public DbSet<Comment> Comments;
         public DbSet<UpdateLog> UpdateLogs;
         public DbSet<MuteLog> MuteLogs;
+        public System.Data.Entity.DbSet<Blog.Models.ApplicationUser> ApplicationUsers { get; set; }
     }
 }

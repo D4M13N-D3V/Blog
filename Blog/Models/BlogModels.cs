@@ -21,6 +21,7 @@ namespace Blog.Models
         public string AuthorId { get; set; }
         public string Title { get; set; }
         public string Body { get; set; }
+        public string Slug { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime UpdateDate { get; set; }
         public string UpdateReason { get; set; }
