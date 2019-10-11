@@ -1,0 +1,88 @@
+﻿@using Blog.Models;
+@model Blog.Models.SearchResultsViewModel
+
+
+@Html.Partial("_ImageBannerPartial")
+
+<div class="row">
+    <div class="col-6 offset-3">
+        @{
+            var posts = Model.BlogPosts;
+            var comments = Model.Comments;
+            Dictionary<DateTime, object> orderedResults = new Dictionary<DateTime, object>();
+            foreach (var post in posts)
+            {
+                orderedResults.Add(post.CreateDate, post);
+            };
+            foreach (var comment in comments)
+            {
+                orderedResults.Add(comment.CreateDate, comment);
+            };
+            <br />
+            orderedResults.OrderByDescending(x => x.Key);
+            if (orderedResults.Count > 0)
+            {
+                foreach (var result in orderedResults.Values)
+                {
+                    if (result is Comment)
+                    {
+                        var comment = (Comment)result;
+
+                        <li class="media">
+                            <img class="d-flex mr-3 img-circle" src="https://thepowerofthedream.org/wp-content/uploads/2015/09/generic-profile-picture.jpg" width="60" alt="Generic placeholder image">
+
+                            <div class="media-body">
+                                <h5 class="mt-0 mb-1">@comment.Author.DisplayName</h5>
+                                @Html.Raw(comment.Content)
+                                <a href="@Url.Action("Details", new { slug = comment.BlogPost.Slug })"><button class="btn btn-outline-primary">View Related Article</button></a>
+                            </div>
+                        </li>
+                    }
+                    else
+                    {
+                        var blog = (BlogPost)result;
+
+
+                        <li class="media" style="padding-top:5%;">
+                            <img class="d-flex mr-3 img-circle" src="https://thepowerofthedream.org/wp-content/uploads/2015/09/generic-profile-picture.jpg" width="60" alt="Generic placeholder image">
+                            <div class="media-body">
+                                <div class="row" style="padding-top:5%;">
+                                    <div class="col-12">
+                                        <ul class="text-uppercase list-inline font-13 font-medium">
+                                            <li><a href="#">@blog.Author.DisplayName,</a></li>
+                                            <li><a href="#">Written @blog.CreateDate.Month @blog.CreateDate.Day, @blog.CreateDate.Year</a></li>
+                                        </ul>
+                                        <h2 class="title font-light"><a href="#" class="link">@blog.Title</a></h2>
+                                    </div>
+                                </div>
+                                <div class="row" style="padding-bottom:5%">
+                                    <div class="col-6">
+                                        <p class="m-t-30 m-b-30">@Html.Raw(blog.Summary)</p>
+                                        <ul class="text-uppercase list-inline font-13 font-medium">
+                                            @Html.ActionLink("CONTINUE READING", "Details", new { slug = blog.Slug })
+                                        </ul>
+                                    </div>
+                                    <div class="col-6">
+                                        <img src="@blog.MediaLink" style="width:100%" />
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                }
+            }
+            else
+            {
+
+
+                <div class="mini-spacer">
+                    <h2 class="title font-light text-center"><a href="#" class="link">We couldnt find anything matching your search.</a></h2>
+                    <p class="m-t-30 m-b-30 text-center">
+                        Make sure you are spelling it right. We couldnt find any comments or articles with matching content.
+                    </p>
+                </div>
+            }
+        }
+    </div>
+</div>
+

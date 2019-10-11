@@ -1,6 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 
+@using Microsoft.AspNet.Identity;
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -29,7 +30,6 @@
     <link href="~/Content/themify-icons.css" rel="stylesheet" />
     <link href="~/Content/weather-icons.min.css" rel="stylesheet" />
 </head>
-
 <body>
 
     <div class="preloader">
@@ -38,7 +38,6 @@
             <p class="loader__label">Damiens Blog</p>
         </div>
     </div>
-
     <div class="topbar">
         <div class="header6">
             <div class="container po-relative">
@@ -46,6 +45,13 @@
                     <a href="@Url.Action("Index", "Home")" class="navbar-brand"><img src="~/Images/white-text.png" /></a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#h6-info" aria-controls="h6-info" aria-expanded="false" aria-label="Toggle navigation"><span class="ti-menu"></span></button>
                     <div class="collapse navbar-collapse hover-dropdown font-14 ml-auto" id="h6-info">
+                        @using (Html.BeginForm("Search", "BlogPosts", FormMethod.Post, new { @style="display: inline-block;" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Editor("searchText", new { htmlAttributes = new { @placeholder="Search", @class = "form-control", @style = "width:200px;height:20px;display: inline-block;" } })
+                            <button class="btn-sm btn-primary" style="display: inline-block;"><i class="fa fa-search"></i></button>
+
+                        }
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item" style="cursor:pointer">
                                 <a class="nav-link" href="@Url.Action("Index", "Home" )">

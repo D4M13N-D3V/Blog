@@ -31,7 +31,7 @@ namespace Blog.Controllers
             comment.CreateDate = DateTime.Now;
             db.Comments.Add(comment);
             db.SaveChanges();
-            return RedirectToAction("Details", "BlogPosts", new { id = comment.BlogPostId });
+            return RedirectToAction("Details", "BlogPosts", new { slug = db.BlogPosts.FirstOrDefault(x=>x.Id==comment.BlogPostId).Slug});
         }
 
         // POST: Comments/Edit/5
@@ -51,7 +51,7 @@ namespace Blog.Controllers
                     updatedComment.UpdateReason = comment.UpdateReason;
                     db.Entry(updatedComment).State = EntityState.Modified;
                     db.SaveChanges();
-                    return RedirectToAction("Details", "BlogPosts", new { id = updatedComment.BlogPostId });
+                    return RedirectToAction("Details", "BlogPosts", new { slug = updatedComment.BlogPost.Slug });
                 }
                 else
                 {
@@ -73,10 +73,10 @@ namespace Blog.Controllers
                 if (User.IsInRole("Moderator") || User.IsInRole("Admin"))
                 {
                     Comment comment = db.Comments.Find(deletedCommentId);
-                    var blogId = comment.BlogPostId;
+                    var blogSlug = comment.BlogPost.Slug;
                     db.Comments.Remove(comment);
                     db.SaveChanges();
-                    return RedirectToAction("Details", "BlogPosts", new { id = blogId });
+                    return RedirectToAction("Details", "BlogPosts", new { slug = blogSlug });
                 }
                 else
                 {

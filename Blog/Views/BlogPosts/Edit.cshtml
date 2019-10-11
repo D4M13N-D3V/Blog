@@ -21,10 +21,9 @@
                     @Html.ValidationMessageFor(model => model.UpdateReason, "", new { @class = "text-danger" })
                 </div>
                 <div class="col-4">
-                    <button class="btn waves-effect waves-light btn-block btn-warning">Preview</button>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" style="padding-top:2%">
                 <div class="col-8">
                     @Html.EditorFor(model => model.MediaLink, new { htmlAttributes = new { @Value = Model.MediaLink, @class = "form-control", @placeholder = "Thumbnail URL" } })
                     @Html.ValidationMessageFor(model => model.MediaLink, "", new { @class = "text-danger" })

@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Blog.Models;
+using Blog.Utilities;
 using Microsoft.AspNet.Identity;
 
 namespace Blog.Controllers
@@ -23,14 +24,28 @@ namespace Blog.Controllers
         }
 
         // GET: BlogPosts/Details/5
-        public ActionResult Details(int? id)
+        //public ActionResult Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    BlogPost blogPost = db.BlogPosts.Find(id);
+        //    return View(blogPost);
+        //}
+        public ActionResult Details(string slug)
         {
-            if (id == null)
+            if (String.IsNullOrWhiteSpace(slug))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            BlogPost blogPost = db.BlogPosts.Find(id);
+            BlogPost blogPost = db.BlogPosts.FirstOrDefault(p => p.Slug == slug);
+            if (blogPost == null)
+            {
+                return HttpNotFound();
+            }
             return View(blogPost);
+
         }
 
         // GET: BlogPosts/Create
@@ -63,33 +78,55 @@ namespace Blog.Controllers
         {
             if (ModelState.IsValid)
             {
-                blogPost.AuthorId = User.Identity.GetUserId();
-                blogPost.Slug = blogPost.Title.Replace(' ', '-');
-                blogPost.CreateDate = DateTime.Now;
-                db.BlogPosts.Add(blogPost);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (User.Identity.IsAuthenticated)
+                {
+                    if (User.IsInRole("Admin") || User.IsInRole("Writer"))
+                    {
+                        var Slug = StringUtilities.URLFriendly(blogPost.Title); if (String.IsNullOrWhiteSpace(Slug)) { ModelState.AddModelError("Title", "Invalid title"); return View(blogPost); }
+                        if (db.BlogPosts.Any(p => p.Slug == Slug)) { ModelState.AddModelError("Title", "The title must be unique"); return View(blogPost); }
+                        blogPost.AuthorId = User.Identity.GetUserId();
+                        blogPost.Slug = Slug;
+                        blogPost.CreateDate = DateTime.Now;
+                        db.BlogPosts.Add(blogPost);
+                        db.SaveChanges();
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("Login", "Account");
+                }
             }
-
-            ViewBag.AuthorId = new SelectList(db.Users, "Id", "FirstName", blogPost.AuthorId);
-            return View(blogPost);
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
 
         // GET: BlogPosts/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+            if (User.Identity.IsAuthenticated)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                BlogPost blogPost = db.BlogPosts.Find(id);
+                if (blogPost != null && User.IsInRole("Admin") || User.Identity.GetUserId()==blogPost.AuthorId)
+                {
+                    return View(blogPost);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
-            BlogPost blogPost = db.BlogPosts.Find(id);
-            if (blogPost == null)
+            else
             {
-                return HttpNotFound();
+                return RedirectToAction("Login", "Account");
             }
-            ViewBag.AuthorId = new SelectList(db.Users, "Id", "FirstName", blogPost.AuthorId);
-            return View(blogPost);
         }
 
         // POST: BlogPosts/Edit/5
@@ -98,7 +135,7 @@ namespace Blog.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Title,Body,MedaLink,UpdateReason")] BlogPost blogPost, int Id)
+        public ActionResult Edit([Bind(Include = "Title,Body,MediaLink,UpdateReason")] BlogPost blogPost, int Id)
         {
 
             if (User.Identity.IsAuthenticated)
@@ -108,11 +145,11 @@ namespace Blog.Controllers
                 post.Title = blogPost.Title;
                 post.MediaLink = blogPost.MediaLink;
                 post.UpdateReason = blogPost.UpdateReason;
-                if (User.IsInRole("Admin") || User.Identity.GetUserId() == post.AuthorId)
+                if (User.IsInRole("Admin") || User.Identity.GetUserId() == post.AuthorId)   
                 {
                     db.Entry(post).State = EntityState.Modified;
                     db.SaveChanges();
-                    return RedirectToAction("Details", "BlogPosts", new { id=post.Id });
+                    return RedirectToAction("Details", "BlogPosts", new { slug=post.Slug });
                 }
                 else
                 {
@@ -127,21 +164,6 @@ namespace Blog.Controllers
             return View(blogPost);
         }
 
-        // GET: BlogPosts/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            BlogPost blogPost = db.BlogPosts.Find(id);
-            if (blogPost == null)
-            {
-                return HttpNotFound();
-            }
-            return View(blogPost);
-        }
-
         // POST: BlogPosts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -153,6 +175,13 @@ namespace Blog.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult Search(string searchText)
+        {
+            var viewModel = new SearchResultsViewModel();
+            viewModel.Comments = db.Comments.Where(x => x.Content.Contains(searchText)).ToList();
+            viewModel.BlogPosts = db.BlogPosts.Where(x => x.Title.Contains(searchText) || x.Body.Contains(searchText)).ToList();
+            return View("Results",viewModel);
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

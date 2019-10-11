@@ -48,7 +48,7 @@
                             <a href="#"><img class="card-img-top" src="@blogPost.MediaLink" alt="wrappixel kit"></a>
                             <div class="p-30">
                                 <div class="d-flex no-block font-14">
-                                    @Html.ActionLink("Read More", "Details", "BlogPosts", new { blogPost.Id }, null)
+                                    @Html.ActionLink("Read More", "Details", "BlogPosts", new { slug = blogPost.Slug }, null)
                                     <span class="ml-auto">@name, @date</span>
                                 </div>
                                 <h5 class="font-medium m-t-20"><a href="#" class="link">@blogPost.Title</a></h5>

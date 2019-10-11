@@ -49,6 +49,8 @@ namespace Blog.Models
         public DbSet<BlogPost> BlogPosts { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<UpdateLog> UpdateLogs { get; set; }
-        public DbSet<MuteLog> MuteLogs{get; set;}
+        public DbSet<MuteLog> MuteLogs { get; set; }
+        public DbSet<Subscription> Subscriptions { get; set; }
+        public DbSet<ContactRequest> ContactRequests { get; set; }
     }
 }

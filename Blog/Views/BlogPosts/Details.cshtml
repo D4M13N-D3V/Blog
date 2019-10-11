@@ -18,14 +18,14 @@
                     @if (User.IsInRole("Admin") || User.Identity.GetUserId() == Model.AuthorId)
                     {
                         <li>
-                            <button class="btn btn-outline-warning">@Html.ActionLink("Edit", "Edit", new { id = Model.Id })</button>
+                            <a href="@Url.Action("Edit", new { id = Model.Id })"><button class="btn-sm btn-outline-warning">Edit</button></a>
                         </li>
                         <li>
                             @using (Html.BeginForm("Delete", "BlogPosts", FormMethod.Post, new { }))
                             {
                                 @Html.AntiForgeryToken()
                                 @Html.Hidden("blogPostToDelete", Model.Id);
-                                <button class="btn btn-outline-danger" type="submit">Delete</button>
+                                <button class="btn-sm btn-outline-danger" type="submit">Delete</button>
                             }
 
                         </li>
@@ -40,7 +40,7 @@
         <br />
         @if (User.Identity.IsAuthenticated)
         {
-            Html.BeginForm("Create", "Comments", FormMethod.Post, new { @class = "form-control" });
+           using(Html.BeginForm("Create", "Comments", FormMethod.Post, new { @class = "form-control" }))
             {
                 @Html.AntiForgeryToken()
                 @Html.Hidden("BlogPostId", Model.Id);
@@ -93,12 +93,12 @@ else
                     </div>
                     @if (User.IsInRole("Moderator") || User.IsInRole("Admin"))
                     {
-                        @*Html.BeginForm("Delete", "Comments", FormMethod.Post, new { @class = "form-control" });
-                            {
+                        using (Html.BeginForm("Delete", "Comments", FormMethod.Post, new {}))
+                        {
                                 @Html.AntiForgeryToken()
                                 @Html.Hidden("deletedCommentId", comment.Id);
                                 <button type="submit" class="btn btn-danger">Delete</button>
-                            }*@
+                        }
                         <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#comment-@comment.Id">Edit</button>
                         <div class="modal fade bd-example-modal-lg" id="comment-@comment.Id" tabindex="-1" role="dialog" aria-labelledby="comment- @comment.Id" aria-hidden="true">
                             <div class="modal-dialog modal-lg">
@@ -110,7 +110,6 @@ else
                                                 {
                                                     @Html.AntiForgeryToken()
                                                     @Html.Hidden("commentId", comment.Id);
-                                                    @Html.Hidden("AuthorId", comment.AuthorId);
                                                     @Html.Hidden("UpdateDate", comment.UpdateDate);
                                                     <div class="row">
                                                         <div class="col-12">

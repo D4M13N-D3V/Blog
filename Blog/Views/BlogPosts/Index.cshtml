@@ -37,11 +37,11 @@
                     <div class="col-6">
                         <p class="m-t-30 m-b-30">@Html.Raw(blogPost.Summary)</p>
                         <ul class="text-uppercase list-inline font-13 font-medium">
-                            @Html.ActionLink("CONTINUE READING", "Details", new { id = blogPost.Id }) 
+                            @Html.ActionLink("CONTINUE READING", "Details", new { slug = blogPost.Slug }) 
                         </ul>
                     </div>
                     <div class="col-6">
-                        <img src="@blogPost.MediaLink" style="width:100%"/>
+                        <img src="@blogPost.MediaLink" style="width:auto;height:400px"/>
                     </div>
                 </div>
                 <hr />
