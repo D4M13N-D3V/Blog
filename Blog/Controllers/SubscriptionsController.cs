@@ -10,6 +10,7 @@ using Blog.Models;
 
 namespace Blog.Controllers
 {
+    [RequireHttps]
     public class SubscriptionsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

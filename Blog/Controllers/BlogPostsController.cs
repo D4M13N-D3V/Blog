@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -12,6 +13,7 @@ using Microsoft.AspNet.Identity;
 
 namespace Blog.Controllers
 {
+    [RequireHttps]
     public class BlogPostsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -74,7 +76,7 @@ namespace Blog.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,AuthorId,Title,Body,Summary,Slug,CreateDate,UpdateDate,UpdateReason,MediaLink,Listed")] BlogPost blogPost)
+        public ActionResult Create(BlogPost blogPost, HttpPostedFileBase uploadImage)
         {
             if (ModelState.IsValid)
             {
@@ -82,7 +84,13 @@ namespace Blog.Controllers
                 {
                     if (User.IsInRole("Admin") || User.IsInRole("Writer"))
                     {
-                        var Slug = StringUtilities.URLFriendly(blogPost.Title); if (String.IsNullOrWhiteSpace(Slug)) { ModelState.AddModelError("Title", "Invalid title"); return View(blogPost); }
+                        if (ImageUploadValidator.IsWebFriendlyImage(uploadImage)) {
+                            var fileName = Path.GetFileName(uploadImage.FileName);
+                            var path = Path.Combine(Server.MapPath("~/Uploads/"), fileName);
+                            uploadImage.SaveAs(path);
+                            blogPost.MediaLink = "/Uploads/" + fileName;
+                        }
+                        var Slug = Utilities.Utilities.URLFriendly(blogPost.Title); if (String.IsNullOrWhiteSpace(Slug)) { ModelState.AddModelError("Title", "Invalid title"); return View(blogPost); }
                         if (db.BlogPosts.Any(p => p.Slug == Slug)) { ModelState.AddModelError("Title", "The title must be unique"); return View(blogPost); }
                         blogPost.AuthorId = User.Identity.GetUserId();
                         blogPost.Slug = Slug;
@@ -160,8 +168,6 @@ namespace Blog.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            ViewBag.AuthorId = new SelectList(db.Users, "Id", "FirstName", blogPost.AuthorId);
-            return View(blogPost);
         }
 
         // POST: BlogPosts/Delete/5
