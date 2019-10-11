@@ -1,64 +1,51 @@
 ﻿@model IEnumerable<Blog.Models.BlogPost>
 
 @{
-    ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Articles";
 }
 
-<h2>Index</h2>
+@Html.Partial("_ImageBannerPartial")
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Author.FirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Body)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreateDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UpdateDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UpdateReason)
-        </th>
-        <th></th>
-    </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Author.FirstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Body)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreateDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UpdateDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UpdateReason)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
 
-</table>
+
+    <div class="col-md-6 offset-3">
+        @if (Model.Count() == 0)
+        {
+
+            <div class="mini-spacer">
+                <h2 class="title font-light text-center"><a href="#" class="link">We couldnt find any published posts.</a></h2>
+                <p class="m-t-30 m-b-30 text-center">
+                    Sorry about that.
+                </p>
+            </div>
+        }
+        else
+        {
+            foreach (var blogPost in Model.Reverse())
+            {
+                <div class="row" style="padding-top:5%;">
+                    <div class="col-12">
+                        <ul class="text-uppercase list-inline font-13 font-medium">
+                            <li><a href="#">@blogPost.Author.DisplayName,</a></li>
+                            <li><a href="#">Written @blogPost.CreateDate.Month @blogPost.CreateDate.Day, @blogPost.CreateDate.Year</a></li>
+                        </ul>
+                        <h2 class="title font-light"><a href="#" class="link">@blogPost.Title</a></h2>
+                    </div>
+                </div>
+                <div class="row" style="padding-bottom:5%">
+                    <div class="col-6">
+                        <p class="m-t-30 m-b-30">@Html.Raw(blogPost.Summary)</p>
+                        <ul class="text-uppercase list-inline font-13 font-medium">
+                            @Html.ActionLink("CONTINUE READING", "Details", new { id = blogPost.Id }) 
+                        </ul>
+                    </div>
+                    <div class="col-6">
+                        <img src="@blogPost.MediaLink" style="width:100%"/>
+                    </div>
+                </div>
+                <hr />
+
+            }
+        }
+    </div>

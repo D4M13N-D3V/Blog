@@ -1,0 +1,68 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="icon" type="image/png" sizes="16x16" href="Images/favicon.png">
+    <title>@ViewBag.Title - Damiens Blog</title>
+
+    <link href="~/Content/aos.css" rel="stylesheet" />
+    <link href="~/Content/blog-homepage.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-grid.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-grid.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-reboot.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-reboot.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/iconmind.css" rel="stylesheet" />
+    <link href="~/Content/perfect-scrollbar.css" rel="stylesheet" />
+    <link href="~/Content/perfect-scrollbar.min.css" rel="stylesheet" />
+    <link href="~/Content/prism.css" rel="stylesheet" />
+    <link href="~/Content/simple-line-icons.css" rel="stylesheet" />
+    <link href="~/Content/style.css" rel="stylesheet" />
+    <link href="~/Content/themify-icons.css" rel="stylesheet" />
+    <link href="~/Content/weather-icons.min.css" rel="stylesheet" />
+</head>
+
+<body>
+
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader__figure"></div>
+            <p class="loader__label">Damiens Blog</p>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="container-fluid">
+            <div class="row" style="padding-top:5%">
+                <div class="col-6 offset-3">
+                    @RenderBody();
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/aos.js"></script>
+    <script src="~/Scripts/bootstrap.bundle.js"></script>
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/perfect-scrollbar.jquery.min.js"></script>
+    <script src="~/Scripts/popper.min.js"></script>
+    <script src="~/Scripts/prism.js"></script>
+    <script src="~/Scripts/custom.min.js"></script>
+</body>
+@RenderSection("scripts", required: false)
+
+</html>
+

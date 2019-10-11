@@ -1,31 +1,67 @@
-﻿@{
+﻿@model IEnumerable<Blog.Models.BlogPost>
+@{
     ViewBag.Title = "Home Page";
 }
+<!-- ============================================================== -->
+<!-- Static Slider 10  -->
+<!-- ============================================================== -->
+@Html.Partial("_ImageBannerPartial")
+<div class="blog-home1 spacer bg-light">
+    <div class="container">
+        <!-- Row  -->
+        <div class="row justify-content-center" style="padding-top:5%">
+            <!-- Column -->
+            <div class="col-md-8 text-center">
+                <h6 class="text-themecolor text-uppercase">Subscription</h6>
+                <h2 class="title">Stay informed about new articles</h2>
+                <h6 class="subtitle m-t-30">Any time a new .</h6>
+                <form class="m-t-30">
+                    <div class="form-group">
+                        <input class="form-control" type="text" placeholder="Your Name" />
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="email" placeholder="Email Address" />
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-danger btn-block btn-md text-uppercase ">Subscribe </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row justify-content-center" style="padding-top:10%">
+            <div class="col-md-8 text-center">
+                <h6 class="text-themecolor text-uppercase">Recent Articles</h6>
+                <h2 class="title">Learning, creating, sharing, every week.</h2>
+            </div>
+        </div>
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+        @{
+            <div class="row m-t-40" style="padding-top:10%">
+                @foreach (var blogPost in Model)
+                {
+                    var name = blogPost.Author.DisplayName;
+                    var date = blogPost.CreateDate.Month + "/" + blogPost.CreateDate.Day + "/" + blogPost.CreateDate.Year;
+
+                    <div class="col justify-content-center" id="blogPosts">
+                        <div class="card card-shadow" data-aos="flip-left" data-aos-duration="1200">
+                            <a href="#"><img class="card-img-top" src="@blogPost.MediaLink" alt="wrappixel kit"></a>
+                            <div class="p-30">
+                                <div class="d-flex no-block font-14">
+                                    @Html.ActionLink("Read More", "Details", "BlogPosts", new { blogPost.Id }, null)
+                                    <span class="ml-auto">@name, @date</span>
+                                </div>
+                                <h5 class="font-medium m-t-20"><a href="#" class="link">@blogPost.Title</a></h5>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        <div class="row m-t-40">
+            <div class="col-6 offset-3">
+                <button class="btn btn-outline-info btn-block btn-md text-uppercase ">VIEW MORE</button>
+            </div>
+        </div>
     </div>
 </div>

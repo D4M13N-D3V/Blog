@@ -23,17 +23,50 @@ namespace Blog.Migrations
             if (!context.Roles.Any(r => r.Name == "Admin")) roleManager.Create(new IdentityRole { Name = "Admin" });
             if (!context.Roles.Any(r => r.Name == "Writer")) roleManager.Create(new IdentityRole { Name = "Writer" });
             if (!context.Roles.Any(r => r.Name == "Moderator")) roleManager.Create(new IdentityRole { Name = "Moderator" });
-            if (!context.Roles.Any(r => r.Name == "User")) roleManager.Create(new IdentityRole { Name = "User" });
-            if (!context.Users.Any(u => u.UserName == "damien"))
+            if (!context.Users.Any(u => u.UserName == "root@mailinator.com"))
             {
-                var user = new ApplicationUser {
-                    UserName = "root",
-                    Email = "root@damiensblog.com",
-                    FirstName ="Root", LastName="User",
-                    DisplayName ="Root", Muted=false,};
+                var user = new ApplicationUser
+                {
+                    UserName = "root@mailinator.com",
+                    Email = "root@mailinator.com",
+                    FirstName = "Root",
+                    LastName = "User",
+                    DisplayName = "Root User",
+                    Muted = false,
+                };
 
-                userManager.Create(user, "demoPassword!");
+                userManager.Create(user, "rootDemo1!");
                 userManager.AddToRole(user.Id, "Admin");
+            }
+            if (!context.Users.Any(u => u.UserName == "moderator@coderfoundry.com"))
+            {
+                var user = new ApplicationUser
+                {
+                    UserName = "moderator@coderfoundry.com",
+                    Email = "moderator@coderfoundry.com",
+                    FirstName = "Coder",
+                    LastName = "Foundry",
+                    DisplayName = "Coder Foundry",
+                    Muted = false,
+                };
+
+                userManager.Create(user, "rootDemo1!");
+                userManager.AddToRole(user.Id, "Moderator");
+            }
+            if (!context.Users.Any(u => u.UserName == "writer@mailinator.com"))
+            {
+                var user = new ApplicationUser
+                {
+                    UserName = "writer@mailinator.com",
+                    Email = "writer@mailinator.com",
+                    FirstName = "Default",
+                    LastName = "Writer",
+                    DisplayName = "Default Writer",
+                    Muted = false,
+                };
+
+                userManager.Create(user, "rootDemo1!");
+                userManager.AddToRole(user.Id, "Writer");
             }
         }
     }

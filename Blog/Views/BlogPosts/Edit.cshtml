@@ -1,83 +1,73 @@
-﻿@model Blog.Models.BlogPost
+﻿
+
+
+@model Blog.Models.BlogPost
 
 @{
-    ViewBag.Title = "Edit";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "New Article";
 }
 
-<h2>Edit</h2>
-
-
-@using (Html.BeginForm())
+@Html.Partial("_ImageBannerPartial")
+@using (Html.BeginForm("Edit", "BlogPosts", FormMethod.Post, new { @class = "form-control" }))
 {
     @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>BlogPost</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Id)
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.AuthorId, "AuthorId", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("AuthorId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.AuthorId, "", new { @class = "text-danger" })
+    @Html.Hidden("Id", Model.Id)
+    @Model.Id
+    <div class="row" style="padding-top:5%">
+        <div class="col-8 offset-2">
+            <div class="row">
+                <div class="col-8">
+                    @Html.EditorFor(model => model.UpdateReason, new { htmlAttributes = new { @Value = Model.UpdateReason, @class = "form-control", @placeholder = "Reason for update." } })
+                    @Html.ValidationMessageFor(model => model.UpdateReason, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-4">
+                    <button class="btn waves-effect waves-light btn-block btn-warning">Preview</button>
+                </div>
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+            <div class="row">
+                <div class="col-8">
+                    @Html.EditorFor(model => model.MediaLink, new { htmlAttributes = new { @Value = Model.MediaLink, @class = "form-control", @placeholder = "Thumbnail URL" } })
+                    @Html.ValidationMessageFor(model => model.MediaLink, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-4">
+                    <button class="btn waves-effect waves-light btn-block btn-warning">Preview</button>
+                </div>
             </div>
-        </div>
+            <div class="row" style="padding-top:2%">
+                <div class="col-8">
+                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @Value = Model.Title, @class = "form-control", @placeholder = "Article Title" } })
+                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-2">
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Body, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Body, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Body, "", new { @class = "text-danger" })
+                    <button class="btn waves-effect waves-light btn-block btn-success" type="submit">Post</button>
+                </div>
+                <div class="col-2">
+                    <div class="custom-control custom-checkbox mr-sm-2">
+                        @Html.CheckBoxFor(model => model.Listed, new { htmlAttributes = new { @class = "custom-control-input" } })
+                        <label class="custom-control-label" for="customControlAutosizing">List This Article</label>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.CreateDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CreateDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CreateDate, "", new { @class = "text-danger" })
+            <div class="row">
+                <div class="col-12">
+                    @Html.EditorFor(model => model.Summary, new { htmlAttributes = new { @Value = Model.Summary, @class = "form-control", @placeholder = "Article Summary, Is shown on preview page.." } })
+                    @Html.ValidationMessageFor(model => model.Summary, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.UpdateDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.UpdateDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.UpdateDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.UpdateReason, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.UpdateReason, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.UpdateReason, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+            <div class="row" style="padding-top:2%">
+                <div class="col-12">
+                    @Html.EditorFor(model => model.Body, new { htmlAttributes = new { @Value = Model.Body, @class = "mceEditor", @rows = 25 } });
+                    @*<textarea id="richTextEditor" name="blogBody" class="form-control" rows="25">*@
+                    @*</textarea>*@
+                </div>
             </div>
         </div>
     </div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+@*@section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }*@
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+

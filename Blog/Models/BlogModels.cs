@@ -2,10 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Blog.Models
 {
     public enum UpdateTypes { BLOG,COMMENT }
+
+    public class BlogPostDetailsViewModel
+    {
+        public BlogPost BlogPost { get; set; }
+        public ICollection<Comment> Comments { get; set; }
+        public Comment CreatedComment { get; set; }
+
+        public BlogPostDetailsViewModel(){
+            Comments = new HashSet<Comment>();
+        }
+    }
 
     public class BlogPost
     {
@@ -20,12 +32,15 @@ namespace Blog.Models
         public int Id { get; set; }
         public string AuthorId { get; set; }
         public string Title { get; set; }
+        [AllowHtml]
         public string Body { get; set; }
+        public string Summary { get; set; }
         public string Slug { get; set; }
         public DateTime CreateDate { get; set; }
-        public DateTime UpdateDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
         public string UpdateReason { get; set; }
-
+        public string MediaLink { get; set; }
+        public bool Listed { get; set; }
         //Virtual Navigation  ( make sure there are references to the parents and children types and are able to store it )
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ApplicationUser Author { get; set; }
@@ -37,11 +52,10 @@ namespace Blog.Models
         public int BlogPostId { get; set; }
         public string AuthorId { get; set; }
         public DateTime CreateDate { get; set; }
+        [AllowHtml]
         public string Content { get; set; }
-        public string MediaUrl { get; set; }
         public DateTime? UpdateDate { get; set; }
         public string UpdateReason { get; set; }
-        public bool Published { get; set; }
 
         //Virtual Navigation  ( make sure there are references to the parents and children types and are able to store it )
         public virtual BlogPost BlogPost { get; set; }

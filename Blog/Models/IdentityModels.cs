@@ -46,10 +46,9 @@ namespace Blog.Models
             return new ApplicationDbContext();
         }
         //Need to add a entry for each Model
-        public DbSet<BlogPost> BlogPosts;
-        public DbSet<Comment> Comments;
-        public DbSet<UpdateLog> UpdateLogs;
-        public DbSet<MuteLog> MuteLogs;
-        public System.Data.Entity.DbSet<Blog.Models.ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<BlogPost> BlogPosts { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<UpdateLog> UpdateLogs { get; set; }
+        public DbSet<MuteLog> MuteLogs{get; set;}
     }
 }

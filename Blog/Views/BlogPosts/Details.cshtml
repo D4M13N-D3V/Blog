@@ -1,67 +1,142 @@
-﻿@model Blog.Models.BlogPost
+﻿@using Microsoft.AspNet.Identity
+@model Blog.Models.BlogPost
 
 @{
-    ViewBag.Title = "Details";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Article";
 }
 
-<h2>Details</h2>
+@Html.Partial("_ImageBannerPartial")
 
-<div>
-    <h4>BlogPost</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Author.FirstName)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Author.FirstName)
-        </dd>
+<div class="row">
+    <div class="col-6 offset-3">
+        <div class="row">
+            <div class="col-12">
+                <ul class="text-uppercase m-t-40 list-inline font-13 font-medium">
+                    <li><a href="#">@Model.Author.DisplayName</a></li>
+                    <li><a href="#">@Model.CreateDate.Month/@Model.CreateDate.Day/@Model.CreateDate.Year</a></li>
+                    @if (User.IsInRole("Admin") || User.Identity.GetUserId() == Model.AuthorId)
+                    {
+                        <li>
+                            <button class="btn btn-outline-warning">@Html.ActionLink("Edit", "Edit", new { id = Model.Id })</button>
+                        </li>
+                        <li>
+                            @using (Html.BeginForm("Delete", "BlogPosts", FormMethod.Post, new { }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("blogPostToDelete", Model.Id);
+                                <button class="btn btn-outline-danger" type="submit">Delete</button>
+                            }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Body)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Body)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.CreateDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CreateDate)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.UpdateDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.UpdateDate)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.UpdateReason)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.UpdateReason)
-        </dd>
-
-    </dl>
+                        </li>
+                    }
+                </ul>
+                <h2 class="title font-light"><a href="#" class="link">@Model.Title</a></h2>
+                @Html.Raw(Model.Body)
+                <br />
+                <img src="@Model.MediaLink" style="width:100%" />
+            </div>
+        </div>
+        <br />
+        @if (User.Identity.IsAuthenticated)
+        {
+            Html.BeginForm("Create", "Comments", FormMethod.Post, new { @class = "form-control" });
+            {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("BlogPostId", Model.Id);
+                <div class="row">
+                    <div class="col-12">
+                        @Html.Editor("newCommentContent", new { htmlAttributes = new { @class = "mceEditor", @placeholder = "Enter comment here.", @rows = 5, @cols = 10 } })
+                    </div>
+                </div>
+                <div class="row" style="padding-top:2%">
+                    <div class="col-2">
+                        <button type="submit" class="btn btn-info waves-effect waves-light m-r-10">Submit</button>
+                    </div>
+                </div>
+            }
+        }
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+@if (Model.Comments.Count <= 0)
+{
+    <div class="row justify-content-center" style="padding-top:5%">
+        <div class="col-8">
+            <h2 class="title font-light text-center">Nobody has made a comment!</h2>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <p class="m-t-30 m-b-30 text-center">
+                    Be the first!
+                </p>
+            }
+            else
+            {
+                <p class="m-t-30 m-b-30 text-center">
+                    Be the first! (@Html.ActionLink("Login", "Login", "Account"))
+                </p>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div class="col-6 offset-3">
+        <h3>Comments (@Model.Comments.Count)</h3>
+        <ul class="list-unstyled with-noborder m-t-30">
+            @foreach (var comment in Model.Comments.OrderByDescending(c => c.CreateDate))
+            {
+                <li class="media">
+                    <img class="d-flex mr-3 img-circle" src="https://thepowerofthedream.org/wp-content/uploads/2015/09/generic-profile-picture.jpg" width="60" alt="Generic placeholder image">
+                    <div class="media-body">
+                        <h5 class="mt-0 mb-1">@comment.Author.DisplayName</h5>
+                        @Html.Raw(comment.Content)
+                    </div>
+                    @if (User.IsInRole("Moderator") || User.IsInRole("Admin"))
+                    {
+                        @*Html.BeginForm("Delete", "Comments", FormMethod.Post, new { @class = "form-control" });
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("deletedCommentId", comment.Id);
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            }*@
+                        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#comment-@comment.Id">Edit</button>
+                        <div class="modal fade bd-example-modal-lg" id="comment-@comment.Id" tabindex="-1" role="dialog" aria-labelledby="comment- @comment.Id" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="container">
+                                        <div class="row" style="padding-top:2%">
+                                            <div class="col-12">
+                                                @using (Html.BeginForm("Edit", "Comments", FormMethod.Post, new { @class = "form-control" }))
+                                                {
+                                                    @Html.AntiForgeryToken()
+                                                    @Html.Hidden("commentId", comment.Id);
+                                                    @Html.Hidden("AuthorId", comment.AuthorId);
+                                                    @Html.Hidden("UpdateDate", comment.UpdateDate);
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            @Html.Editor("UpdateReason", new { htmlAttributes = new { @class = "form-control", @placeholder = "Update reason", @rows = 5, @cols = 10 } })
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" style="padding-top:2%">
+                                                        <div class="col-12">
+                                                            @Html.Editor("Content", new { htmlAttributes = new { @class = "mceEditor", @Value = comment.Content, @placeholder = "Enter comment here.", @rows = 5, @cols = 10 } })
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" style="padding-top:2%; padding-bottom:2%">
+                                                        <div class="col">
+                                                            <button type="submit" class="btn btn-info waves-effect waves-light m-r-10">Submit</button>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </li>
+            }
+        </ul>
+    </div>
+}
