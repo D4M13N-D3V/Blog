@@ -15,17 +15,19 @@
                 <h6 class="text-themecolor text-uppercase">Subscription</h6>
                 <h2 class="title">Stay informed about new articles</h2>
                 <h6 class="subtitle m-t-30">Any time a new .</h6>
-                <form class="m-t-30">
+                @using (Html.BeginForm("Create", "Subscriptions", FormMethod.Post, new { @class = "m-t-30" }))
+                {
+                    @Html.AntiForgeryToken();
                     <div class="form-group">
-                        <input class="form-control" type="text" placeholder="Your Name" />
+                        @Html.Editor("subname", new { htmlAttributes = new { @class = "form-control" } })
                     </div>
                     <div class="form-group">
-                        <input class="form-control" type="email" placeholder="Email Address" />
+                        @Html.Editor("subemail", new { htmlAttributes = new { type="email", @class = "form-control" } })
                     </div>
                     <div class="form-group">
-                        <button class="btn btn-danger btn-block btn-md text-uppercase ">Subscribe </button>
+                        <button class="btn btn-danger btn-block btn-md text-uppercase" type="submit">Subscribe </button>
                     </div>
-                </form>
+                }
             </div>
         </div>
         <div class="row justify-content-center" style="padding-top:10%">
