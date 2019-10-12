@@ -17,6 +17,7 @@
                     <li><a href="#">@Model.CreateDate.Month/@Model.CreateDate.Day/@Model.CreateDate.Year</a></li>
                     @if (User.IsInRole("Admin") || User.Identity.GetUserId() == Model.AuthorId)
                     {
+                        
                         <li>
                             <a href="@Url.Action("Edit", new { slug = Model.Slug })"><button class="btn-sm btn-outline-warning">Edit</button></a>
                         </li>

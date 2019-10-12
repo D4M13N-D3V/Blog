@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Web;
 
@@ -22,7 +23,53 @@ namespace Blog.Utilities
     }
     public class Utilities
     {
+        public static string GetBaseUrl()
+        {
+            var request = HttpContext.Current.Request;
+            var appUrl = HttpRuntime.AppDomainAppVirtualPath;
 
+            if (appUrl != "/")
+                appUrl = "/" + appUrl;
+
+            var baseUrl = string.Format("{0}://{1}{2}", request.Url.Scheme, request.Url.Authority, appUrl);
+
+            return baseUrl;
+        }
+        public static bool SendEmail(string reciept, string body, string title)
+        {
+            using (var msg = new MailMessage())
+            {
+                msg.To.Add(new MailAddress(reciept));
+                msg.From = new MailAddress(Config.EmailUsername);
+                msg.ReplyToList.Add(reciept);
+                msg.Subject = title;
+                msg.Body = body.ToString();
+                msg.IsBodyHtml = true;
+
+                var client = new SmtpClient
+                {
+                    Host = Config.SMTPServer,
+                    Credentials = new System.Net.NetworkCredential(Config.EmailUsername, Config.EmailPassword),
+                    Port = Config.SMTPPort,
+                    EnableSsl = true
+                };
+
+                // You can use Port 25 if 587 is blocked 
+                try
+                {
+                    client.Send(msg);
+                    return true;
+                }
+                catch (SmtpException smtpEx)
+                {
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
+        }
         /// <summary>
         /// Produces optional, URL-friendly version of a title, "like-this-one". 
         /// hand-tuned for speed, reflects performance refactoring contributed
