@@ -15,16 +15,36 @@ namespace Blog
 
             routes.MapRoute(
                 name: "BlogpostDetails",
-                url: "BlogPosts/Details/{slug}",
+                url: "Articles/Details/{slug}",
                 defaults: new
                 {
                     controller = "BlogPosts",
                     action = "Details",
                     slug = UrlParameter.Optional
                 });
+
+            routes.MapRoute(
+                name: "ArticlesHome",
+                url: "Articles",
+                defaults: new
+                {
+                    controller = "BlogPosts",
+                    action = "Index",
+                    slug = UrlParameter.Optional
+                });
+
+            routes.MapRoute(
+                name: "search",
+                url: "Content/Search/{searchText}",
+                defaults: new
+                {
+                    controller = "BlogPosts",
+                    action = "Search",
+                    searchText = UrlParameter.Optional
+                });
             routes.MapRoute(
                 name: "BlogPostEdit",
-                url: "BlogPosts/Edit/{slug}",
+                url: "Articles/Edit/{slug}",
                 defaults: new
                 {
                     controller = "BlogPosts",
@@ -33,7 +53,7 @@ namespace Blog
                 });
             routes.MapRoute(
                 name: "BlogPostDelete",
-                url: "BlogPosts/Delete/{slug}",
+                url: "Articles/Delete/{slug}",
                 defaults: new
                 {
                     controller = "BlogPosts",

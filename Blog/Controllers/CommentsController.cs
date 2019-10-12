@@ -20,10 +20,10 @@ namespace Blog.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
         public ActionResult Create( Comment comment, string newCommentContent)
         {
-            if (User.Identity.IsAuthenticated)
+            if (!User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Error", "Home", new { errorText = "You must be logged in to continue." });
             }
