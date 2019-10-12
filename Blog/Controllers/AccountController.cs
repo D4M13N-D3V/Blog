@@ -57,6 +57,7 @@ namespace Blog.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+            if (User.Identity.IsAuthenticated) return RedirectToAction("Error", "Home", new { errorText = "You are already logged in!" });
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
@@ -139,6 +140,7 @@ namespace Blog.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+            if (User.Identity.IsAuthenticated) return RedirectToAction("Error", "Home", new { errorText = "You are already logged in!" });
             return View();
         }
 
@@ -391,6 +393,7 @@ namespace Blog.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
+            if (!User.Identity.IsAuthenticated) return RedirectToAction("Error", "Home", new { errorText = "You are not logged in!" });
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");
         }
