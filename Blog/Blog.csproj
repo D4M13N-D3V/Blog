@@ -503,6 +503,7 @@
     <Content Include="Images\ui\success.svg" />
     <Content Include="Images\ui\video.jpg" />
     <Content Include="Images\ui\warning.svg" />
+    <Content Include="Images\white-text.png" />
     <Content Include="Scripts\aos.js" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
