@@ -35,13 +35,15 @@ namespace Blog.Utilities
 
             return baseUrl;
         }
-        public static bool SendEmail(string reciept, string body, string title)
+        public static bool SendEmail(List<string> emails, string body, string title)
         {
             using (var msg = new MailMessage())
             {
-                msg.To.Add(new MailAddress(reciept));
+                foreach(var email in emails)
+                {
+                    msg.To.Add(new MailAddress(email));
+                }
                 msg.From = new MailAddress(Config.EmailUsername);
-                msg.ReplyToList.Add(reciept);
                 msg.Subject = title;
                 msg.Body = body.ToString();
                 msg.IsBodyHtml = true;
