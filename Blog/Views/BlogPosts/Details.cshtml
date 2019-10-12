@@ -18,13 +18,13 @@
                     @if (User.IsInRole("Admin") || User.Identity.GetUserId() == Model.AuthorId)
                     {
                         <li>
-                            <a href="@Url.Action("Edit", new { id = Model.Id })"><button class="btn-sm btn-outline-warning">Edit</button></a>
+                            <a href="@Url.Action("Edit", new { slug = Model.Slug })"><button class="btn-sm btn-outline-warning">Edit</button></a>
                         </li>
                         <li>
                             @using (Html.BeginForm("Delete", "BlogPosts", FormMethod.Post, new { }))
                             {
                                 @Html.AntiForgeryToken()
-                                @Html.Hidden("blogPostToDelete", Model.Id);
+                                @Html.Hidden("slug", Model.Slug);
                                 <button class="btn-sm btn-outline-danger" type="submit">Delete</button>
                             }
 
@@ -34,7 +34,7 @@
                 <h2 class="title font-light"><a href="#" class="link">@Model.Title</a></h2>
                 @Html.Raw(Model.Body)
                 <br />
-                <img src="@Model.MediaLink" style="width:512px;height:512px" />
+                <img src="@Model.MediaLink" style="width:100%" />
             </div>
         </div>
         <br />

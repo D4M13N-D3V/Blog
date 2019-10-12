@@ -587,11 +587,11 @@
     <Content Include="Views\Shared\_AccountLayout.cshtml" />
     <Content Include="Views\Shared\_ImageBannerPartial.cshtml" />
     <Content Include="Views\BlogPosts\Create.cshtml" />
-    <Content Include="Views\BlogPosts\Delete.cshtml" />
     <Content Include="Views\BlogPosts\Details.cshtml" />
     <Content Include="Views\BlogPosts\Edit.cshtml" />
     <Content Include="Views\BlogPosts\Index.cshtml" />
     <Content Include="Views\BlogPosts\Results.cshtml" />
+    <Content Include="Views\Home\Error.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

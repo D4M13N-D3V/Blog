@@ -12,8 +12,7 @@ using Blog.Utilities;
 using Microsoft.AspNet.Identity;
 
 namespace Blog.Controllers
-{
-    [RequireHttps]
+{ [RequireHttps]
     public class BlogPostsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -62,12 +61,12 @@ namespace Blog.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Error", "Home", new { errorText = "You must be a administrator or the writer to modify this post." });
                 }
             }
             else
             {
-                return RedirectToAction("Login","Account");
+                return RedirectToAction("Error", "Home", new { errorText = "You must be logged in to continue." });
             }
         }
 
@@ -85,7 +84,7 @@ namespace Blog.Controllers
                     if (User.IsInRole("Admin") || User.IsInRole("Writer"))
                     {
                         if (ImageUploadValidator.IsWebFriendlyImage(uploadImage)) {
-                            var fileName = Path.GetFileName(uploadImage.FileName);
+                            var fileName = DateTime.Now.Ticks + ".png";
                             var path = Path.Combine(Server.MapPath("~/Uploads/"), fileName);
                             uploadImage.SaveAs(path);
                             blogPost.MediaLink = "/Uploads/" + fileName;
@@ -101,39 +100,41 @@ namespace Blog.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Error", "Home", new { errorText = "You must be a administrator or the writer to modify this post." });
                     }
                 }
                 else
                 {
-                    return RedirectToAction("Login", "Account");
+                    return RedirectToAction("Error", "Home", new { errorText = "You must be logged in to continue." });
                 }
             }
             else
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Error", "Home", new { errorText = "There was a error with this action, let a system administartor know." });
             }
         }
 
 
         // GET: BlogPosts/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(string slug)
         {
+
             if (User.Identity.IsAuthenticated)
             {
-                BlogPost blogPost = db.BlogPosts.Find(id);
-                if (blogPost != null && User.IsInRole("Admin") || User.Identity.GetUserId()==blogPost.AuthorId)
+                BlogPost blogPost = db.BlogPosts.FirstOrDefault(x=>x.Slug==slug);
+                if(blogPost==null) return RedirectToAction("Error", "Home", new { errorText = "You must be a administrator or the writer to modify this post." });
+                if  ( User.IsInRole("Admin") || User.Identity.GetUserId()==blogPost.AuthorId)
                 {
                     return View(blogPost);
                 }
                 else
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Error", "Home", new { errorText = "You must be a administrator or the writer to modify this post." });
                 }
             }
             else
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Error", "Home", new { errorText = "You must be logged in to continue." });
             }
         }
 
@@ -143,44 +144,68 @@ namespace Blog.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Title,Body,MediaLink,UpdateReason")] BlogPost blogPost, int Id)
+        public ActionResult Edit([Bind(Include = "Title,Body,MediaLink,UpdateReason")] BlogPost blogPost, string slug, HttpPostedFileBase uploadImage)
         {
 
             if (User.Identity.IsAuthenticated)
             {
-                BlogPost post = db.BlogPosts.Find(Id);
-                post.Body = blogPost.Body;
-                post.Title = blogPost.Title;
-                post.MediaLink = blogPost.MediaLink;
-                post.UpdateReason = blogPost.UpdateReason;
-                if (User.IsInRole("Admin") || User.Identity.GetUserId() == post.AuthorId)   
+                if (ImageUploadValidator.IsWebFriendlyImage(uploadImage))
                 {
+                    var fileName = DateTime.Now.Ticks + ".png";
+                    var path = Path.Combine(Server.MapPath("~/Uploads/"), fileName);
+                    uploadImage.SaveAs(path);
+                    blogPost.MediaLink = "/Uploads/" + fileName;
+                }
+                BlogPost post = db.BlogPosts.FirstOrDefault(x=>x.Slug==slug);
+                if (post == null) return RedirectToAction("Error", "Home",new { errorText="Invalid post"});
+                if (User.IsInRole("Admin") || User.Identity.GetUserId() == post.AuthorId)
+                {
+                    post.Body = blogPost.Body;
+                    post.Title = blogPost.Title;
+                    post.MediaLink = blogPost.MediaLink;
+                    post.UpdateReason = blogPost.UpdateReason;
                     db.Entry(post).State = EntityState.Modified;
                     db.SaveChanges();
                     return RedirectToAction("Details", "BlogPosts", new { slug=post.Slug });
                 }
                 else
                 {
-                    return View("Index", "Home");
+                    return RedirectToAction("Error", "Home", new { errorText = "You must be a administrator or the writer to modify this post." });
                 }
             }
             else
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Error", "Home", new { errorText = "You must be logged in to continue." });
             }
         }
 
         // POST: BlogPosts/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int blogPostToDelete)
+        public ActionResult Delete(string slug)
         {
-            BlogPost blogPost = db.BlogPosts.Find(blogPostToDelete);
-            db.BlogPosts.Remove(blogPost);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
 
+            if (User.Identity.IsAuthenticated)
+            {
+                BlogPost post = db.BlogPosts.FirstOrDefault(x => x.Slug == slug);
+                if (post == null) return RedirectToAction("Error", "Home", new { errorText = "Invalid post" });
+                if (User.IsInRole("Admin") || User.Identity.GetUserId() == post.AuthorId)
+                {
+                    BlogPost blogPost = db.BlogPosts.FirstOrDefault(x=>x.Slug==slug);
+                    db.BlogPosts.Remove(blogPost);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return RedirectToAction("Error", "Home", new { errorText = "You must be a administrator or the writer to modify this post." });
+                }
+            }
+            else
+            {
+                return RedirectToAction("Error", "Home", new { errorText = "You must be logged in to continue." });
+            }
+        }
         public ActionResult Search(string searchText)
         {
             var viewModel = new SearchResultsViewModel();

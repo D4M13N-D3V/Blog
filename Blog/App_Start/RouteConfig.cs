@@ -14,12 +14,30 @@ namespace Blog
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
-                name: "NewSlug",
+                name: "BlogpostDetails",
                 url: "BlogPosts/Details/{slug}",
                 defaults: new
                 {
                     controller = "BlogPosts",
                     action = "Details",
+                    slug = UrlParameter.Optional
+                });
+            routes.MapRoute(
+                name: "BlogPostEdit",
+                url: "BlogPosts/Edit/{slug}",
+                defaults: new
+                {
+                    controller = "BlogPosts",
+                    action = "Edit",
+                    slug = UrlParameter.Optional
+                });
+            routes.MapRoute(
+                name: "BlogPostDelete",
+                url: "BlogPosts/Delete/{slug}",
+                defaults: new
+                {
+                    controller = "BlogPosts",
+                    action = "Delete",
                     slug = UrlParameter.Optional
                 });
             routes.MapRoute(

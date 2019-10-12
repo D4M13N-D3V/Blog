@@ -31,5 +31,10 @@ namespace Blog.Controllers
 
             return View();
         }
+        public ActionResult Error(string errorText)
+        {
+            ViewBag.Error = errorText;
+            return View();
+        }
     }
 }

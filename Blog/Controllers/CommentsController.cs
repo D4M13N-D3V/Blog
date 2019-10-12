@@ -20,19 +20,22 @@ namespace Blog.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateInput(false)]
+        [ValidateAntiForgeryToken]
         public ActionResult Create( Comment comment, string newCommentContent)
         {
-            if (!User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Error", "Home", new { errorText = "You must be logged in to continue." });
             }
-            comment.AuthorId = User.Identity.GetUserId();
-            comment.Content = newCommentContent;
-            comment.CreateDate = DateTime.Now;
-            db.Comments.Add(comment);
-            db.SaveChanges();
-            return RedirectToAction("Details", "BlogPosts", new { slug = db.BlogPosts.FirstOrDefault(x=>x.Id==comment.BlogPostId).Slug});
+            else
+            {
+                comment.AuthorId = User.Identity.GetUserId();
+                comment.Content = newCommentContent;
+                comment.CreateDate = DateTime.Now;
+                db.Comments.Add(comment);
+                db.SaveChanges();
+                return RedirectToAction("Details", "BlogPosts", new { slug = db.BlogPosts.FirstOrDefault(x => x.Id == comment.BlogPostId).Slug });
+            }
         }
 
         // POST: Comments/Edit/5
@@ -56,12 +59,12 @@ namespace Blog.Controllers
                 }
                 else
                 {
-                    return View("Index", "BlogPosts");
+                    return RedirectToAction("Error", "Home", new { errorText = "You must be a administrator, moderator, or the writer to modify this post." });
                 }
             }
             else
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Error", "Home", new { errorText = "You must be logged in to continue." });
             }
         }
 
@@ -81,12 +84,12 @@ namespace Blog.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("Index", "BlogPosts");
+                    return RedirectToAction("Error", "Home", new { errorText = "You must be a administrator, moderator, or the writer to modify this post." });
                 }
             }
             else
             {
-                return RedirectToAction("Index", "BlogPosts");
+                return RedirectToAction("Error", "Home", new { errorText = "You must be logged in to continue." });
             }
         }
 
