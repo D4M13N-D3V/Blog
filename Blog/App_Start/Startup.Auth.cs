@@ -6,6 +6,8 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
 using Blog.Models;
+using Owin.Security.Providers.LinkedIn;
+using Owin.Security.Providers.GitHub;
 
 namespace Blog
 {
@@ -45,7 +47,10 @@ namespace Blog
             // This is similar to the RememberMe option when you log in.
             app.UseTwoFactorRememberBrowserCookie(DefaultAuthenticationTypes.TwoFactorRememberBrowserCookie);
 
-            
+            app.UseLinkedInAuthentication("788y098ezvf011", "cMEWRDUHbl1NgKpw");
+
+            //app.UseGitHubAuthentication("84c031f0d9e78453bcf5", "//");
+
             app.UseMicrosoftAccountAuthentication(
                 clientId: "6ede909e-68a0-4949-9316-4e50f98a61e3",
                 clientSecret: "7]2JZ=R6[7YzqNDxXbBv-j:Try.64pE8");

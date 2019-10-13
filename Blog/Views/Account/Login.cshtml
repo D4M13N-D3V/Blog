@@ -17,7 +17,7 @@
             </div>
         </div>
     <div class="row">
-        <div class="col-4 offset-2">
+        <div class="col-4 offset-3">
 
             @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { }))
             {
@@ -33,23 +33,21 @@
                         @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Password" })
                         @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
                         @Html.AntiForgeryToken()
-                        Remember Me
-                        @Html.CheckBoxFor(m => m.RememberMe)
 
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12 text-center">
-
-                        <button type="submit" class="btn-lg btn-success" style="width:70%">Login</button>
-
-
-
+                <div class="row" style="padding-top:2%">
+                    <div class="col-6 text-center">
+                        <button type="submit" class="btn-lg btn-success" style="width:100%">Login</button>
+                    </div>
+                    <div class="col-6 text-center">
+                        Remember Me
+                        @Html.CheckBoxFor(m => m.RememberMe)
                     </div>
                 </div>
             }
         </div>
-        <div class="col-4">
+        <div class="col-2">
             @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
         </div>
     </div>
