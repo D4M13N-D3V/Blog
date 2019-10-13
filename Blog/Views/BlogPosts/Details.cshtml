@@ -17,11 +17,11 @@
 
                     @if (Model.UpdateDate.HasValue)
                     {
-                        <li><a href="#">Written @Model.CreateDate.Month @Model.CreateDate.Day, @Model.CreateDate.Year / Updated @Model.UpdateDate.Value.Month @Model.UpdateDate.Value.Day, @Model.UpdateDate.Value.Year ( @Model.UpdateReason )</a></li>
+                        <li><a href="#">Written @Model.CreateDate.Month/@Model.CreateDate.Day/@Model.CreateDate.Year / Updated @Model.UpdateDate.Value.Month @Model.UpdateDate.Value.Day, @Model.UpdateDate.Value.Year ( @Model.UpdateReason )</a></li>
                     }
                     else
                     {
-                        <li><a href="#">Written @Model.CreateDate.Month @Model.CreateDate.Day, @Model.CreateDate.Year</a></li>
+                        <li><a href="#">Written @Model.CreateDate.Month/@Model.CreateDate.Day/@Model.CreateDate.Year</a></li>
                     }
                     @if (User.IsInRole("Admin") || User.Identity.GetUserId() == Model.AuthorId)
                     {

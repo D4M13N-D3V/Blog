@@ -30,11 +30,11 @@
                             <li><a href="#">@blogPost.Author.DisplayName,</a></li>
                             @if (blogPost.UpdateDate.HasValue)  
                             {
-                                <li><a href="#">Written @blogPost.CreateDate.Month @blogPost.CreateDate.Day, @blogPost.CreateDate.Year / Updated @blogPost.UpdateDate.Value.Month @blogPost.UpdateDate.Value.Day, @blogPost.UpdateDate.Value.Year ( @blogPost.UpdateReason )</a></li>
+                                <li><a href="#">Written @blogPost.CreateDate.Month/@blogPost.CreateDate.Day/@blogPost.CreateDate.Year / Updated @blogPost.UpdateDate.Value.Month/@blogPost.UpdateDate.Value.Day/@blogPost.UpdateDate.Value.Year ( @blogPost.UpdateReason )</a></li>
                             }
                             else
                             {
-                                <li><a href="#">Written @blogPost.CreateDate.Month @blogPost.CreateDate.Day, @blogPost.CreateDate.Year</a></li>
+                                <li><a href="#">Written @blogPost.CreateDate.Month/@blogPost.CreateDate.Day/@blogPost.CreateDate.Year</a></li>
                             }
                         </ul>
                         <h2 class="title font-light"><a href="#" class="link">@blogPost.Title</a></h2>
