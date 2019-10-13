@@ -7,7 +7,7 @@
     ViewBag.Title = "New Article";
 }
 
-@Html.Partial("_ImageBannerPartial")
+
 @using (Html.BeginForm("Create", "BlogPosts", FormMethod.Post, new {enctype = "multipart/form-data", @class = "form-control" }))
 {
     @Html.AntiForgeryToken()
