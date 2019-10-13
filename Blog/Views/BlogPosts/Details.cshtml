@@ -14,7 +14,15 @@
             <div class="col-12">
                 <ul class="text-uppercase m-t-40 list-inline font-13 font-medium">
                     <li><a href="#">@Model.Author.DisplayName</a></li>
-                    <li><a href="#">@Model.CreateDate.Month/@Model.CreateDate.Day/@Model.CreateDate.Year</a></li>
+
+                    @if (Model.UpdateDate.HasValue)
+                    {
+                        <li><a href="#">Written @Model.CreateDate.Month @Model.CreateDate.Day, @Model.CreateDate.Year / Updates @Model.UpdateDate.Value.Month @Model.UpdateDate.Value.Day, @Model.UpdateDate.Value.Year</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="#">Written @Model.CreateDate.Month @Model.CreateDate.Day, @Model.CreateDate.Year</a></li>
+                    }
                     @if (User.IsInRole("Admin") || User.Identity.GetUserId() == Model.AuthorId)
                     {
 
@@ -101,9 +109,9 @@ else
                         {
                                 @Html.AntiForgeryToken()
                                 @Html.Hidden("deletedCommentId", comment.Id);
-                                <button type="submit" class="btn btn-danger">Delete</button>
+                                <button type="submit" class="btn-sm btn-danger">Delete</button>
                         }
-                        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#comment-@comment.Id">Edit</button>
+                        <button type="button" class="btn-sm btn-warning" data-toggle="modal" data-target="#comment-@comment.Id">Edit</button>
                         <div class="modal fade bd-example-modal-lg" id="comment-@comment.Id" tabindex="-1" role="dialog" aria-labelledby="comment- @comment.Id" aria-hidden="true">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">

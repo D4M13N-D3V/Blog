@@ -14,7 +14,7 @@ namespace Blog.Controllers
 
         public ActionResult Index()
         {
-            var blogPosts = db.BlogPosts.OrderByDescending(x => x.CreateDate).Take(3).ToList();
+            var blogPosts = db.BlogPosts.Where(x=>x.Listed).OrderByDescending(x => x.CreateDate).Take(3).ToList();
             return View(blogPosts);
         }
 

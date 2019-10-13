@@ -39,12 +39,12 @@
                 </div>
                 <div class="col-2">
 
-                    <button class="btn waves-effect waves-light btn-block btn-success" type="submit">Post</button>
+                    <button class="btn waves-effect waves-light btn-block btn-success" type="submit">Save</button>
                 </div>
                 <div class="col-2">
                     <div class="custom-control custom-checkbox mr-sm-2">
-                        @Html.CheckBoxFor(model => model.Listed, new { htmlAttributes = new { @class = "custom-control-input" } })
-                        <label class="custom-control-label" for="customControlAutosizing">List This Article</label>
+                        @Html.CheckBoxFor(model => model.Listed, new { htmlAttributes = new {@value=Model.Listed, @class = "custom-control-input" } })
+                        <label>List This Article</label>
                     </div>
                 </div>
             </div>
