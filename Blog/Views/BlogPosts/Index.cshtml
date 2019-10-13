@@ -30,7 +30,7 @@
                             <li><a href="#">@blogPost.Author.DisplayName,</a></li>
                             @if (blogPost.UpdateDate.HasValue)  
                             {
-                                <li><a href="#">Written @blogPost.CreateDate.Month @blogPost.CreateDate.Day, @blogPost.CreateDate.Year / Updates @blogPost.UpdateDate.Value.Month @blogPost.UpdateDate.Value.Day, @blogPost.UpdateDate.Value.Year ( @blogPost.UpdateReason )</a></li>
+                                <li><a href="#">Written @blogPost.CreateDate.Month @blogPost.CreateDate.Day, @blogPost.CreateDate.Year / Updated @blogPost.UpdateDate.Value.Month @blogPost.UpdateDate.Value.Day, @blogPost.UpdateDate.Value.Year ( @blogPost.UpdateReason )</a></li>
                             }
                             else
                             {

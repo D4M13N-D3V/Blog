@@ -65,8 +65,11 @@ namespace Blog
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
-
-
+            routes.MapRoute(
+                "404-PageNotFound",
+                "{*url}",
+                new { controller = "Home", action = "Error", errorText="Error 404, sorry about that couldnt find the page you were looking for.." }
+            );
         }
     }
 }
