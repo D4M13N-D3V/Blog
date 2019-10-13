@@ -17,7 +17,7 @@
                     <li><a href="#">@Model.CreateDate.Month/@Model.CreateDate.Day/@Model.CreateDate.Year</a></li>
                     @if (User.IsInRole("Admin") || User.Identity.GetUserId() == Model.AuthorId)
                     {
-                        
+
                         <li>
                             <a href="@Url.Action("Edit", new { slug = Model.Slug })"><button class="btn-sm btn-outline-warning">Edit</button></a>
                         </li>
@@ -35,7 +35,10 @@
                 <h2 class="title font-light"><a href="#" class="link">@Model.Title</a></h2>
                 @Html.Raw(Model.Body)
                 <br />
-                <img src="@Model.MediaLink" style="width:100%" />
+                @if (Model.MediaLink != null)
+                {
+                    <img src="@Model.MediaLink" style="width:100%" />
+                }
             </div>
         </div>
         <br />

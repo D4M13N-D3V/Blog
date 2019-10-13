@@ -60,7 +60,16 @@
 
                         <div class="col justify-content-center" id="blogPosts">
                             <div class="card card-shadow" data-aos="flip-left" data-aos-duration="1200">
-                                <a href="#"><img class="card-img-top" src="@blogPost.MediaLink" alt="wrappixel kit"></a>
+                                <div class="p-30">
+                                    @if (blogPost.MediaLink != null)
+                                    {
+                                        <a href="#"><img class="card-img-top" src="@blogPost.MediaLink" alt="wrappixel kit"></a>
+                                    }
+                                    else
+                                    {
+                                        <p>@blogPost.Summary</p>
+                                    }
+                                </div>
                                 <div class="p-30">
                                     <div class="d-flex no-block font-14">
                                         @Html.ActionLink("Read More", "Details", "BlogPosts", new { slug = blogPost.Slug }, null)
