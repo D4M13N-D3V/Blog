@@ -366,6 +366,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BlogPostsController.cs" />
     <Compile Include="Controllers\CommentsController.cs" />
+    <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\SubscriptionsController.cs" />
@@ -383,6 +384,11 @@
     <Compile Include="Utilities\Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Dashboard\animate.min.css" />
+    <Content Include="Content\Dashboard\font-awesome.min.css" />
+    <Content Include="Content\Dashboard\jquery.loading.min.css" />
+    <Content Include="Content\Dashboard\materialdesignicons.min.css" />
+    <Content Include="Content\Dashboard\style.css" />
     <Content Include="Content\Main\animate.css" />
     <Content Include="Content\Main\aos.css" />
     <Content Include="Content\Main\blog-homepage.css" />
@@ -398,6 +404,14 @@
     <Content Include="Images\Main\banner.jpg" />
     <Content Include="Images\favicon.png" />
     <Content Include="Images\white-text.png" />
+    <Content Include="Scripts\Dashboard\app.js" />
+    <Content Include="Scripts\Dashboard\bootstrap.min.js" />
+    <Content Include="Scripts\Dashboard\Chart.min.js" />
+    <Content Include="Scripts\Dashboard\jquery.loading.min.js" />
+    <Content Include="Scripts\Dashboard\jquery.min.js" />
+    <Content Include="Scripts\Dashboard\jquery.nicescroll.min.js" />
+    <Content Include="Scripts\Dashboard\pace.min.js" />
+    <Content Include="Scripts\Dashboard\popper.min.js" />
     <Content Include="Scripts\Main\aos.js" />
     <Content Include="Content\Main\bootstrap-grid.css" />
     <Content Include="Content\Main\bootstrap-grid.min.css" />
@@ -470,6 +484,10 @@
     <Content Include="Images\.DS_Store" />
     <Content Include="Content\fonts\themify.ttf" />
     <Content Include="Content\fonts\themify.woff" />
+    <Content Include="Content\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\fonts\materialdesignicons-webfont.woff" />
+    <Content Include="Content\fonts\materialdesignicons-webfont.woff2" />
     <None Include="packages.config" />
     <Content Include="Scripts\Main\bootstrap.bundle.js.map" />
     <Content Include="Scripts\Main\bootstrap.bundle.min.js.map" />
@@ -490,6 +508,8 @@
     <None Include="Properties\PublishProfiles\DamiensBlog - Web Deploy.pubxml" />
     <Content Include="Views\Subscriptions\SubscriptionSuccess.cshtml" />
     <Content Include="Views\Subscriptions\Exists.cshtml" />
+    <Content Include="Views\Shared\_DashboardLayout.cshtml" />
+    <Content Include="Views\Dashboard\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

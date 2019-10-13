@@ -3,6 +3,12 @@
     string layout = "";
     switch (CurrentName)
     {
+        case "Dashboard":
+            layout = "~/Views/Shared/_DashboardLayout.cshtml";
+            break;
+        case "dashboard":
+            layout = "~/Views/Shared/_DashboardLayout.cshtml";
+            break;
         default:
             layout = "~/Views/Shared/_Layout.cshtml";
             break;
