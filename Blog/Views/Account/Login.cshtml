@@ -6,63 +6,64 @@
 
 
 <div class="container">
-
-
-
-    @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { }))
-    {
-        @Html.AntiForgeryToken()
-
-        <div class="row">
+    <div class="row">
             <div class="col-8 offset-2">
                 <h2 class="title font-light text-center"><a href="#" class="link">Create An Account</a></h2>
             </div>
         </div>
-        <div class="row">
+    <div class="row">
             <div class="col-8 offset-2">
                 @Html.ValidationSummary("", new { @class = "text-danger" })
             </div>
         </div>
-        <div class="row">
-            <div class="col-4 offset-2">
+    <div class="row">
+        <div class="col-4 offset-2">
+
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { }))
+            {
+                @Html.AntiForgeryToken()
                 <div class="row">
                     <div class="col-12">
-                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder="Username/Email" })
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Username/Email" })
                         @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="row" style="padding-top:2%">
                     <div class="col-12">
-                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder="Password" })
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Password" })
                         @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
                         @Html.AntiForgeryToken()
                         Remember Me
                         @Html.CheckBoxFor(m => m.RememberMe)
+
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12 text-center">
-                        
-                    <button type="submit" class="btn-lg btn-outline-success" style="width:70%">Login</button>
-                        
-                      
-                        
-                    </div>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="row">
-                    <div class="col-12">
 
-                        @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+                        <button type="submit" class="btn-lg btn-success" style="width:70%">Login</button>
+
+
 
                     </div>
                 </div>
-            </div>
+            }
         </div>
+        <div class="col-4">
+            @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+        </div>
+    </div>
+</div>
 
 
-    }
+
+
+
+
+
+
+
+
 
 
 
