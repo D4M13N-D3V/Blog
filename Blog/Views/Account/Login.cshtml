@@ -32,7 +32,6 @@
                     <div class="col-12">
                         @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Password" })
                         @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-                        @Html.AntiForgeryToken()
 
                     </div>
                 </div>

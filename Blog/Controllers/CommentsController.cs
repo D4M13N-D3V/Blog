@@ -23,6 +23,7 @@ namespace Blog.Controllers
         [ValidateInput(false)]
         public ActionResult Create( Comment comment, string newCommentContent)
         {
+            if(newCommentContent.Length<5) return RedirectToAction("Error","Home",new { errorText = "Comment must be longer then 5 characters" })
             if (!User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Error", "Home", new { errorText = "You must be logged in to continue." });

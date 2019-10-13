@@ -182,6 +182,7 @@ namespace Blog.Controllers
                     post.Title = blogPost.Title;
                     post.MediaLink = blogPost.MediaLink;
                     post.UpdateReason = blogPost.UpdateReason;
+                    post.UpdateDate = DateTime.Now;
                     post.Listed = blogPost.Listed;
                     db.Entry(post).State = EntityState.Modified;
                     db.SaveChanges();

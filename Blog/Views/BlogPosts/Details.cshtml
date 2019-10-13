@@ -17,7 +17,7 @@
 
                     @if (Model.UpdateDate.HasValue)
                     {
-                        <li><a href="#">Written @Model.CreateDate.Month @Model.CreateDate.Day, @Model.CreateDate.Year / Updates @Model.UpdateDate.Value.Month @Model.UpdateDate.Value.Day, @Model.UpdateDate.Value.Year</a></li>
+                        <li><a href="#">Written @Model.CreateDate.Month @Model.CreateDate.Day, @Model.CreateDate.Year / Updates @Model.UpdateDate.Value.Month @Model.UpdateDate.Value.Day, @Model.UpdateDate.Value.Year ( @Model.UpdateReason )</a></li>
                     }
                     else
                     {
@@ -94,7 +94,7 @@ else
 {
     <div class="col-6 offset-3">
         <h3>Comments (@Model.Comments.Count)</h3>
-        <ul class="list-unstyled with-noborder m-t-30">
+        <ul class="list-    unstyled with-noborder m-t-30">
             @foreach (var comment in Model.Comments.OrderByDescending(c => c.CreateDate))
             {
                 <li class="media">
@@ -102,6 +102,10 @@ else
                     <div class="media-body">
                         <h5 class="mt-0 mb-1">@comment.Author.DisplayName</h5>
                         @Html.Raw(comment.Content)
+                        @if (comment.UpdateDate.HasValue)
+                        {
+                            <p>* Edited @comment.UpdateDate ( @comment.UpdateReason )*</p>
+                        }
                     </div>
                     @if (User.IsInRole("Moderator") || User.IsInRole("Admin"))
                     {
