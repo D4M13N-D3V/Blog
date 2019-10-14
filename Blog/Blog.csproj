@@ -362,7 +362,6 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="Config.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BlogPostsController.cs" />
     <Compile Include="Controllers\CommentsController.cs" />
@@ -489,6 +488,7 @@
     <Content Include="Content\fonts\fontawesome-webfont.woff" />
     <Content Include="Content\fonts\materialdesignicons-webfont.woff" />
     <Content Include="Content\fonts\materialdesignicons-webfont.woff2" />
+    <None Include="BlogConfig.config" />
     <None Include="packages.config" />
     <Content Include="Scripts\Main\bootstrap.bundle.js.map" />
     <Content Include="Scripts\Main\bootstrap.bundle.min.js.map" />
@@ -512,6 +512,7 @@
     <Content Include="Views\Shared\_DashboardLayout.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
     <Content Include="Views\Dashboard\UserManagement.cshtml" />
+    <Content Include="Views\Account\Profile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

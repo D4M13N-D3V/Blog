@@ -52,5 +52,6 @@ namespace Blog.Models
         public DbSet<MuteLog> MuteLogs { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<ContactRequest> ContactRequests { get; set; }
+
     }
 }

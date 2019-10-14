@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
@@ -21,6 +22,14 @@ namespace Blog.Utilities
 
         }
     }
+
+    public class EmailInformation
+    {
+        public List<string> Reciepents = new List<string>();
+        public string Title = "";
+        public string Body = "";
+    }
+
     public class Utilities
     {
         public static string GetBaseUrl()
@@ -35,24 +44,25 @@ namespace Blog.Utilities
 
             return baseUrl;
         }
-        public static bool SendEmail(List<string> emails, string body, string title)
+
+        public static bool SendEmail(EmailInformation info)
         {
             using (var msg = new MailMessage())
             {
-                foreach(var email in emails)
+                foreach(var email in info.Reciepents)
                 {
                     msg.To.Add(new MailAddress(email));
                 }
-                msg.From = new MailAddress(Config.EmailUsername);
-                msg.Subject = title;
-                msg.Body = body.ToString();
+                msg.From = new MailAddress(ConfigurationManager.AppSettings.Get("EmailUsername"));
+                msg.Subject = info.Title;
+                msg.Body = info.Body.ToString();
                 msg.IsBodyHtml = true;
 
                 var client = new SmtpClient
                 {
-                    Host = Config.SMTPServer,
-                    Credentials = new System.Net.NetworkCredential(Config.EmailUsername, Config.EmailPassword),
-                    Port = Config.SMTPPort,
+                    Host = ConfigurationManager.AppSettings.Get("SMTPServer"),
+                    Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings.Get("EmailUsername"), ConfigurationManager.AppSettings.Get("EmailPassword")),
+                    Port = Int32.Parse(ConfigurationManager.AppSettings.Get("SMTPPort")),
                     EnableSsl = true
                 };
 

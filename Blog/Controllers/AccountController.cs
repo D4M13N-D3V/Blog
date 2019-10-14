@@ -17,6 +17,7 @@ namespace Blog.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private ApplicationDbContext db = new ApplicationDbContext();
 
         public AccountController()
         {
@@ -50,6 +51,11 @@ namespace Blog.Controllers
             {
                 _userManager = value;
             }
+        }
+
+        public ActionResult Profile(string id)
+        {
+            return View(UserManager.FindById(id));
         }
 
         //

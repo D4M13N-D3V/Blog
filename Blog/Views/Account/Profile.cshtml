@@ -1,0 +1,84 @@
+﻿@model Blog.Models.ApplicationUser
+
+@{
+    ViewBag.Title = Model.DisplayName + " Profile";
+}
+
+<div class="row" style="padding-top:2%">
+    <div class="offset-4 col-6 text-center">
+        <h2>@Model.DisplayName's Profile</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="offset-2 col-2">
+        <img class="img-circle" src="" style="width:254px;height:254px" />
+    </div>
+    <div class="col-6 text-center">
+        <p>
+            This is an about me section that is suppose to tell you more about me cause this is about me section
+            where i talk about me and have things to talk about that are about me and this is just filler content
+            so ignroe it im just putting this here for testing purposes
+            This is an about me section that is suppose to tell you more about me cause this is about me section
+            where i talk about me and have things to talk about that are about me and this is just filler content
+            so ignroe it im just putting this here for testing purposes
+            This is an about me section that is suppose to tell you more about me cause this is about me section
+            where i talk about me and have things to talk about that are about me and this is just filler content
+            so ignroe it im just putting this here for testing purposes
+            This is an about me section that is suppose to tell you more about me cause this is about me section
+            where i talk about me and have things to talk about that are about me and this is just filler content
+            so ignroe it im just putting this here for testing purposes
+        </p>
+    </div>
+</div>
+<div class="row" style="padding-top:2%">
+    <div class="offset-2 col-4 text-center">
+        <h3>Articles</h3>
+    </div>
+    <div class="col-md-4 text-center">
+        <h3>Comments</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="offset-2 col-4">
+        @foreach (var blogPost in Model.BlogPosts)
+        {
+            <li class="media" style="padding-top:5%;">
+                <img class="d-flex mr-3 img-circle" src="https://thepowerofthedream.org/wp-content/uploads/2015/09/generic-profile-picture.jpg" width="60" alt="Generic placeholder image">
+                <div class="media-body">
+                    <div class="row" style="padding-top:5%;">
+                        <div class="col-12">
+                            <ul class="text-uppercase list-inline font-13 font-medium">
+                                <li><a href="#">Written @blogPost.CreateDate.Month @blogPost.CreateDate.Day, @blogPost.CreateDate.Year</a></li>
+                            </ul>
+                            <h2 class="title font-light"><a href="#" class="link">@blogPost.Title</a></h2>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-bottom:5%">
+                        <div class="col-6">
+                            <p class="m-t-30 m-b-30">@Html.Raw(blogPost.Summary)</p>
+                            <ul class="text-uppercase list-inline font-13 font-medium">
+                                @Html.ActionLink("CONTINUE READING", "Details", "BlogPosts", new { slug = blogPost.Slug },null)
+                            </ul>
+                        </div>
+                        <div class="col-6">
+                            <img src="@blogPost.MediaLink" style="width:100%" />
+                        </div>
+                    </div>
+                </div>
+            </li>
+        }
+    </div>
+    <div class="col-md-4">
+        @foreach (var comment in Model.Comments)
+        {
+            <li class="media">
+                <img class="d-flex mr-3 img-circle" src="https://thepowerofthedream.org/wp-content/uploads/2015/09/generic-profile-picture.jpg" width="60" alt="Generic placeholder image">
+
+                <div class="media-body">
+                    @Html.Raw(comment.Content)
+                    <a href="@Url.Action("Details","BlogPosts", new { slug=comment.BlogPost.Slug })"><button class="btn btn-outline-primary">View Related Article</button></a>
+                </div>
+            </li>
+        }
+    </div>
+</div>

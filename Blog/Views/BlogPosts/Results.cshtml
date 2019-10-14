@@ -2,8 +2,9 @@
 @model Blog.Models.SearchResultsViewModel
 
 
-
-
+@{
+    ViewBag.Title = "Search";
+}
 <div class="row">
     <div class="col-6 offset-3">
         @{
@@ -49,7 +50,7 @@
                                 <div class="row" style="padding-top:5%;">
                                     <div class="col-12">
                                         <ul class="text-uppercase list-inline font-13 font-medium">
-                                            <li><a href="#">@blog.Author.DisplayName,</a></li>
+                                            <li>@Html.ActionLink(blog.Author.DisplayName, "Profile", "Account", new { id = blog.AuthorId }, new { })</li>
                                             <li><a href="#">Written @blog.CreateDate.Month @blog.CreateDate.Day, @blog.CreateDate.Year</a></li>
                                         </ul>
                                         <h2 class="title font-light"><a href="#" class="link">@blog.Title</a></h2>

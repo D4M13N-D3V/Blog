@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.Entity;
 using System.IO;
@@ -112,7 +113,12 @@ namespace Blog.Controllers
                         {
                             Emails.Add(sub.Email);
                         }
-                        Blog.Utilities.Utilities.SendEmail(Emails, html,Config.ApplicationName + "-New Article For You!");
+                        Utilities.Utilities.SendEmail(new EmailInformation
+                        {
+                            Reciepents = Emails,
+                            Body = html,
+                            Title = ConfigurationManager.AppSettings.Get("ApplicationName") + "-New Article For You!"
+                        });
 
                         return RedirectToAction("Index");
                     }

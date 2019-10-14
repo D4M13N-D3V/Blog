@@ -52,39 +52,47 @@
                             <button class="btn-sm btn-primary" style="display: inline-block;"><i class="fa fa-search"></i></button>
 
                         }
-                        <ul class="navbar-nav ml-auto">
-                            <li class="nav-item" style="cursor:pointer">
-                                <a class="nav-link" href="@Url.Action("Index", "Home" )">
-                                    Home
-                                </a>
-                            </li>
-                            <li class="nav-item" style="cursor:pointer">
-                                <a class="nav-link" href="@Url.Action("About", "Home")">
-                                    About
-                                </a>
-                            </li>
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item" style="cursor:pointer">
+                            <a class="nav-link" href="@Url.Action("Index", "Home" )">
+                                Home
+                            </a>
+                        </li>
+                        <li class="nav-item" style="cursor:pointer">
+                            <a class="nav-link" href="@Url.Action("About", "Home")">
+                                About
+                            </a>
+                        </li>
 
-                            <li class="nav-item" style="cursor:pointer">
-                                <a class="nav-link" href="@Url.Action("Contact", "Home")">
-                                    Contact
-                                </a>
-                            </li>
+                        @*<li class="nav-item" style="cursor:pointer">
+            <a class="nav-link" href="@Url.Action("Contact", "Home")">
+                Contact
+            </a>
+        </li>*@
 
+                        <li class="nav-item" style="cursor:pointer">
+                            <a class="nav-link" href="@Url.Action("Index", "BlogPosts")">
+                                Articles
+                            </a>
+                        </li>
+                        @if (User.IsInRole("Admin") || User.IsInRole("Writer"))
+                        {
                             <li class="nav-item" style="cursor:pointer">
-                                <a class="nav-link" href="@Url.Action("Index", "BlogPosts")">
-                                    Articles
+                                <a class="nav-link" href="@Url.Action("Create", "BlogPosts")">
+                                    Write Article
                                 </a>
                             </li>
-                            @if (User.IsInRole("Admin") || User.IsInRole("Writer"))
-                            {
-                                <li class="nav-item" style="cursor:pointer">
-                                    <a class="nav-link" href="@Url.Action("Create", "BlogPosts")">
-                                        Write Article
-                                    </a>
-                                </li>
-                            }
-                            @Html.Partial("_LoginPartial")
-                        </ul>
+                        }
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item" style="cursor:pointer">
+                                <a class="nav-link" href="@Url.Action("Profile", "Account", new { id=User.Identity.GetUserId() })">
+                                    Profile
+                                </a>
+                            </li>
+                        }
+                        @Html.Partial("_LoginPartial")
+                    </ul>
                     </div>
                 </nav>
             </div>
