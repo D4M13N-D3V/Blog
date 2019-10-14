@@ -107,7 +107,7 @@ else
                             <p>* Edited @comment.UpdateDate ( @comment.UpdateReason )*</p>
                         }
                     </div>
-                    @if (User.IsInRole("Moderator") || User.IsInRole("Admin"))
+                    @if (User.IsInRole("Moderator") || User.IsInRole("Admin") || User.Identity.GetUserId()==comment.AuthorId)
                     {
                         using (Html.BeginForm("Delete", "Comments", FormMethod.Post, new {}))
                         {

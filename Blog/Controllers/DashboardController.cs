@@ -22,5 +22,14 @@ namespace Blog.Controllers
         {
             return View();
         }
+
+        public ActionResult UserManagement()
+        {
+            var model = new DashboardViewModel()
+            {
+                Users = db.Users.ToList()
+            };
+            return View();
+        }
     }
 }

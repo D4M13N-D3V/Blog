@@ -48,9 +48,9 @@ namespace Blog.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                if (User.IsInRole("Moderator") || User.IsInRole("Admin"))
+                var updatedComment = db.Comments.Find(commentId);
+                if (User.IsInRole("Moderator") || User.IsInRole("Admin") || User.Identity.GetUserId()==comment.AuthorId)
                 {
-                    var updatedComment = db.Comments.Find(commentId);
                     updatedComment.Content = comment.Content;
                     updatedComment.UpdateDate = DateTime.Now;
                     updatedComment.UpdateReason = comment.UpdateReason;
