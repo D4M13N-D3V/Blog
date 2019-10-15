@@ -20,6 +20,8 @@ namespace Blog.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string DisplayName { get; set; }
+        public string AvatarPath { get; set; }
+        public string Bio { get; set; }
         public bool Muted { get; set; }
         public virtual ICollection<BlogPost> BlogPosts { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }

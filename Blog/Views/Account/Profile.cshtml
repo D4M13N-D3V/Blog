@@ -1,84 +1,239 @@
 ﻿@model Blog.Models.ApplicationUser
+@using Microsoft.AspNet.Identity;
 
 @{
     ViewBag.Title = Model.DisplayName + " Profile";
 }
 
-<div class="row" style="padding-top:2%">
-    <div class="offset-4 col-6 text-center">
-        <h2>@Model.DisplayName's Profile</h2>
-    </div>
-</div>
-<div class="row">
-    <div class="offset-2 col-2">
-        <img class="img-circle" src="" style="width:254px;height:254px" />
-    </div>
-    <div class="col-6 text-center">
-        <p>
-            This is an about me section that is suppose to tell you more about me cause this is about me section
-            where i talk about me and have things to talk about that are about me and this is just filler content
-            so ignroe it im just putting this here for testing purposes
-            This is an about me section that is suppose to tell you more about me cause this is about me section
-            where i talk about me and have things to talk about that are about me and this is just filler content
-            so ignroe it im just putting this here for testing purposes
-            This is an about me section that is suppose to tell you more about me cause this is about me section
-            where i talk about me and have things to talk about that are about me and this is just filler content
-            so ignroe it im just putting this here for testing purposes
-            This is an about me section that is suppose to tell you more about me cause this is about me section
-            where i talk about me and have things to talk about that are about me and this is just filler content
-            so ignroe it im just putting this here for testing purposes
-        </p>
-    </div>
-</div>
-<div class="row" style="padding-top:2%">
-    <div class="offset-2 col-4 text-center">
-        <h3>Articles</h3>
-    </div>
-    <div class="col-md-4 text-center">
-        <h3>Comments</h3>
-    </div>
-</div>
-<div class="row">
-    <div class="offset-2 col-4">
-        @foreach (var blogPost in Model.BlogPosts)
-        {
-            <li class="media" style="padding-top:5%;">
-                <img class="d-flex mr-3 img-circle" src="https://thepowerofthedream.org/wp-content/uploads/2015/09/generic-profile-picture.jpg" width="60" alt="Generic placeholder image">
-                <div class="media-body">
-                    <div class="row" style="padding-top:5%;">
+@if (Model.Id == User.Identity.GetUserId())
+{
+    <div class="row" style="padding-top:2%">
+        <div class="col-8 offset-2">
+            @using (Html.BeginForm("EditImage", "Account", FormMethod.Post, new { enctype = "multipart/form-data"}))
+            {
+                @Html.AntiForgeryToken();
+                @Html.Hidden("profileId", Model.Id)
+            <div class="row text-center">
+                <div class="col-3">
+                    <button class="btn btn-outline-success" type="submit" style="width:100%">Save</button>
+                </div>
+            </div>
+            <div class="row text-center" style="padding-top:2%">
+                <div class="col-2">
+                    <input name="uploadImage" type="file" id="uploadImage" />
+                </div>
+            </div>
+            }
+            <div class="row">
+                <div class="col-2">
+                    <img id="avatarImage" src="@Model.AvatarPath" class="img-circle" style="width:200px;height:200px;" />
+                </div>
+                <div class="col-10">
+                    <div class="row">
                         <div class="col-12">
-                            <ul class="text-uppercase list-inline font-13 font-medium">
-                                <li><a href="#">Written @blogPost.CreateDate.Month @blogPost.CreateDate.Day, @blogPost.CreateDate.Year</a></li>
-                            </ul>
-                            <h2 class="title font-light"><a href="#" class="link">@blogPost.Title</a></h2>
+                            <div class="text-center">
+                                <h1>@Model.DisplayName's Profile Page</h1>
+                            </div>
                         </div>
                     </div>
-                    <div class="row" style="padding-bottom:5%">
-                        <div class="col-6">
-                            <p class="m-t-30 m-b-30">@Html.Raw(blogPost.Summary)</p>
-                            <ul class="text-uppercase list-inline font-13 font-medium">
-                                @Html.ActionLink("CONTINUE READING", "Details", "BlogPosts", new { slug = blogPost.Slug },null)
-                            </ul>
+                    @using (Html.BeginForm("EditDisplayName", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken();
+                        @Html.Hidden("profileId", Model.Id)
+                        <div class="row">
+                            <div class="col-6 offset-2">
+                                @Html.Editor("newDisplayName", Model.DisplayName, new { htmlAttributes = new {@Value=Model.DisplayName, @class = "form-control" } })
+                            </div>
+                            <div class="col-2">
+                                <button type="submit" class="btn btn-outline-success">Save</button>
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <img src="@blogPost.MediaLink" style="width:100%" />
-                        </div>
-                    </div>
-                </div>
-            </li>
-        }
-    </div>
-    <div class="col-md-4">
-        @foreach (var comment in Model.Comments)
-        {
-            <li class="media">
-                <img class="d-flex mr-3 img-circle" src="https://thepowerofthedream.org/wp-content/uploads/2015/09/generic-profile-picture.jpg" width="60" alt="Generic placeholder image">
+                    }
 
-                <div class="media-body">
-                    @Html.Raw(comment.Content)
-                    <a href="@Url.Action("Details","BlogPosts", new { slug=comment.BlogPost.Slug })"><button class="btn btn-outline-primary">View Related Article</button></a>
+                    @using (Html.BeginForm("EditBio", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken();
+                        @Html.Hidden("profileId", Model.Id)
+                        <div class="row" style="padding-top:5%">
+                            <div class="col-7">
+                                <div class="text-right">
+                                    <h3>About Me</h3>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="text-center" style="padding-bottom:25%">
+                                    <button class="btn btn-outline-success">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                @Html.TextArea("newBio", Model.Bio, new { @Value=Model.Bio,@class = "mceEditor" })
+                            </div>
+                        </div>
+                    }
                 </div>
-            </li>
-        }
+            </div>
+
+            <div class="row text-center" style="padding-top:5%">
+                <div class="col-6">
+                    <h2>Articles</h2>
+                </div>
+                <div class="col-6">
+                    <h2>Comments</h2>
+                </div>
+            </div>
+            <div class="row" style="padding-top:2%">
+                <div class="col-6">
+                    @foreach (var blogPost in Model.BlogPosts)
+                    {
+                        <li class="media" style="padding-top:5%;">
+                            <img class="d-flex mr-3 img-circle" src="https://thepowerofthedream.org/wp-content/uploads/2015/09/generic-profile-picture.jpg" width="60" alt="Generic placeholder image">
+                            <div class="media-body">
+                                <div class="row" style="padding-top:5%;">
+                                    <div class="col-12">
+                                        <ul class="text-uppercase list-inline font-13 font-medium">
+                                            <li><a href="#">Written @blogPost.CreateDate.Month @blogPost.CreateDate.Day, @blogPost.CreateDate.Year</a></li>
+                                        </ul>
+                                        <h2 class="title font-light"><a href="#" class="link">@blogPost.Title</a></h2>
+                                    </div>
+                                </div>
+                                <div class="row" style="padding-bottom:5%">
+                                    <div class="col-6">
+                                        <p class="m-t-30 m-b-30">@Html.Raw(blogPost.Summary)</p>
+                                        <ul class="text-uppercase list-inline font-13 font-medium">
+                                            @Html.ActionLink("CONTINUE READING", "Details", "BlogPosts", new { slug = blogPost.Slug }, null)
+                                        </ul>
+                                    </div>
+                                    <div class="col-6">
+                                        <img src="@blogPost.MediaLink" style="width:100%" />
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </div>
+                <div class="col-6">
+                    @foreach (var comment in Model.Comments)
+                    {
+                        <li class="media">
+                            <img class="d-flex mr-3 img-circle" src="https://thepowerofthedream.org/wp-content/uploads/2015/09/generic-profile-picture.jpg" width="60" alt="Generic placeholder image">
+
+                            <div class="media-body">
+                                @Html.Raw(comment.Content)
+                                <a href="@Url.Action("Details","BlogPosts", new { slug=comment.BlogPost.Slug })"><button class="btn btn-outline-primary">View Related Article</button></a>
+                            </div>
+                        </li>
+                    }
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+}
+else
+{
+    <div class="row" style="padding-top:2%">
+        <div class="col-8 offset-2">
+            <div class="row">
+                <div class="col-2">
+                    <img id="avatarImage" src="@Model.AvatarPath" class="img-circle" style="width:200px;height:200px;" />
+                </div>
+                <div class="col-10">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="text-center">
+                                <h1>@Model.DisplayName's Profile Page</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-top:5%">
+                        <div class="col-7">
+                            <div class="text-right">
+                                <h3>About Me</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            @Html.Raw(Model.Bio)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row text-center" style="padding-top:5%">
+                <div class="col-6">
+                    <h2>Articles</h2>
+                </div>
+                <div class="col-6">
+                    <h2>Comments</h2>
+                </div>
+            </div>
+            <div class="row" style="padding-top:2%">
+                <div class="col-6">
+                    @foreach (var blogPost in Model.BlogPosts)
+                    {
+                        <li class="media" style="padding-top:5%;">
+                            <img class="d-flex mr-3 img-circle" src="https://thepowerofthedream.org/wp-content/uploads/2015/09/generic-profile-picture.jpg" width="60" alt="Generic placeholder image">
+                            <div class="media-body">
+                                <div class="row" style="padding-top:5%;">
+                                    <div class="col-12">
+                                        <ul class="text-uppercase list-inline font-13 font-medium">
+                                            <li><a href="#">Written @blogPost.CreateDate.Month @blogPost.CreateDate.Day, @blogPost.CreateDate.Year</a></li>
+                                        </ul>
+                                        <h2 class="title font-light"><a href="#" class="link">@blogPost.Title</a></h2>
+                                    </div>
+                                </div>
+                                <div class="row" style="padding-bottom:5%">
+                                    <div class="col-6">
+                                        <p class="m-t-30 m-b-30">@Html.Raw(blogPost.Summary)</p>
+                                        <ul class="text-uppercase list-inline font-13 font-medium">
+                                            @Html.ActionLink("CONTINUE READING", "Details", "BlogPosts", new { slug = blogPost.Slug }, null)
+                                        </ul>
+                                    </div>
+                                    <div class="col-6">
+                                        <img src="@blogPost.MediaLink" style="width:100%" />
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </div>
+                <div class="col-6">
+                    @foreach (var comment in Model.Comments)
+                    {
+                        <li class="media">
+                            <img class="d-flex mr-3 img-circle" src="https://thepowerofthedream.org/wp-content/uploads/2015/09/generic-profile-picture.jpg" width="60" alt="Generic placeholder image">
+
+                            <div class="media-body">
+                                @Html.Raw(comment.Content)
+                                <a href="@Url.Action("Details","BlogPosts", new { slug=comment.BlogPost.Slug })"><button class="btn btn-outline-primary">View Related Article</button></a>
+                            </div>
+                        </li>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts{
+
+    <script>
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#avatarImage').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#uploadImage").change(function () {
+            readURL(this);
+        });
+    </script>
+}

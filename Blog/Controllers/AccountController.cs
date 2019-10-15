@@ -9,6 +9,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Blog.Models;
+using System.IO;
+using Blog.Utilities;
 
 namespace Blog.Controllers
 {
@@ -55,9 +57,73 @@ namespace Blog.Controllers
 
         public ActionResult Profile(string id)
         {
-            return View(UserManager.FindById(id));
+            var user = UserManager.FindById(id);
+            if (user != null)
+            {
+                return View(user);
+            }
+            else
+            {
+                return RedirectToAction("Error", "Home", new { errorText = "Invalid profile!" });
+            }
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditDisplayName(string profileId, string newDisplayName)
+        {
+            if(User.IsInRole("Admin") || User.Identity.IsAuthenticated && User.Identity.GetUserId() == profileId)
+            {
+                var user = UserManager.FindById(profileId);
+                user.DisplayName = newDisplayName;
 
+                UserManager.Update(user);
+                return RedirectToAction("Profile", new { id = profileId });
+            }
+            else
+            {
+                return RedirectToAction("Error", "Home", new { errorText="Invalid infromation passed or invalid permissions." });
+            }
+        }
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult EditBio(string profileId, string newBio)
+        {
+            if (User.IsInRole("Admin") || User.Identity.IsAuthenticated && User.Identity.GetUserId() == profileId)
+            {
+                var user = UserManager.FindById(profileId);
+                user.Bio = newBio;
+                UserManager.Update(user);
+                return RedirectToAction("Profile", new { id = profileId });
+            }
+            else
+            {
+                return RedirectToAction("Error", "Home", new { errorText = "Invalid infromation passed or invalid permissions." });
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditImage(string profileId, HttpPostedFileBase uploadImage)
+        {
+            if (User.IsInRole("Admin") || User.Identity.IsAuthenticated && User.Identity.GetUserId() == profileId)
+            {
+                var user = UserManager.FindById(profileId);
+
+                if (ImageUploadValidator.IsWebFriendlyImage(uploadImage))
+                {
+                    var fileName = DateTime.Now.Ticks + ".png";
+                    var path = Path.Combine(Server.MapPath("~/Uploads/"), fileName);
+                    uploadImage.SaveAs(path);
+                    user.AvatarPath = "/Uploads/" + fileName;
+                }
+
+                UserManager.Update(user);
+                return RedirectToAction("Profile", new { id = profileId });
+            }
+            else
+            {
+                return RedirectToAction("Error", "Home", new { errorText = "Invalid infromation passed or invalid permissions." });
+            }
+        }
         //
         // GET: /Account/Login
         [AllowAnonymous]
