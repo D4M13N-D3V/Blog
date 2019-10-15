@@ -235,6 +235,12 @@
     <Reference Include="Owin.Security.Providers.Yammer, Version=2.0.0.0, Culture=neutral, PublicKeyToken=1328b8c16b108c43, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.Security.Providers.Yammer.2.26.0\lib\net45\Owin.Security.Providers.Yammer.dll</HintPath>
     </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="PreMailer.Net, Version=1.2.7.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PreMailer.Net.1.2.7\lib\net40\PreMailer.Net.dll</HintPath>
     </Reference>
@@ -401,6 +407,7 @@
     <Content Include="Content\Main\style.css" />
     <Content Include="Content\Main\themify-icons.css" />
     <Content Include="Content\Main\weather-icons.min.css" />
+    <Content Include="Content\PagedList.css" />
     <Content Include="Images\Main\banner.jpg" />
     <Content Include="Images\favicon.png" />
     <Content Include="Images\white-text.png" />

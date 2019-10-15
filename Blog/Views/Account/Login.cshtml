@@ -40,8 +40,17 @@
                         <button type="submit" class="btn-lg btn-success" style="width:100%">Login</button>
                     </div>
                     <div class="col-6 text-center">
-                        Remember Me
-                        @Html.CheckBoxFor(m => m.RememberMe)
+                        <div class="row">
+                            <div class="col-12">
+                                Remember Me
+                                @Html.CheckBoxFor(m => m.RememberMe)
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                @Html.ActionLink("Forgot my password.","ForgotPassword", "Account")
+                            </div>
+                        </div>
                     </div>
                 </div>
             }

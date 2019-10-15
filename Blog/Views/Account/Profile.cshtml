@@ -5,7 +5,7 @@
     ViewBag.Title = Model.DisplayName + " Profile";
 }
 
-@if (Model.Id == User.Identity.GetUserId())
+@if (Model.Id == User.Identity.GetUserId() || User.IsInRole("Admin"))
 {
     <div class="row" style="padding-top:2%">
         <div class="col-8 offset-2">
@@ -36,7 +36,7 @@
                             </div>
                         </div>
                     </div>
-                    @using (Html.BeginForm("EditDisplayName", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    @using (Html.BeginForm("EditDisplayName", "Account", FormMethod.Post, new { @placeholder="Display Name",enctype = "multipart/form-data" }))
                     {
                         @Html.AntiForgeryToken();
                         @Html.Hidden("profileId", Model.Id)
