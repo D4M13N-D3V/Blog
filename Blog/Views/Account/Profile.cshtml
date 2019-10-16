@@ -42,7 +42,8 @@
                         @Html.Hidden("profileId", Model.Id)
                         <div class="row">
                             <div class="col-6 offset-2">
-                                @Html.Editor("newDisplayName", Model.DisplayName, new { htmlAttributes = new {@Value=Model.DisplayName, @class = "form-control" } })
+                                @Html.TextBox("newDisplayName", Model.DisplayName, new { @maxlength = "30", @class = "form-control", @placeholder = "Last Name" })
+                                @*@Html.TextBox("newDisplayName", Model.DisplayName, new { htmlAttributes = new { @maxlength = "15", @Value = Model.DisplayName, @class = "form-control" } })*@
                             </div>
                             <div class="col-2">
                                 <button type="submit" class="btn btn-outline-success">Save</button>
