@@ -11,6 +11,7 @@ using System.Web.Mvc;
 using Blog.Models;
 using Blog.Utilities;
 using Microsoft.AspNet.Identity;
+using PagedList;
 
 namespace Blog.Controllers
 { [RequireHttps]
@@ -18,23 +19,13 @@ namespace Blog.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: BlogPosts
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
-            var blogPosts = db.BlogPosts.Include(b => b.Author);
-            return View(blogPosts.ToList());
+            int pageSize = 5;// display three blog posts at a time on this page
+            int pageNumber = (page ?? 1);
+            var blogPosts = db.BlogPosts.Include(b => b.Author).OrderByDescending(x=>x.CreateDate).ToPagedList(pageNumber, pageSize);
+            return View(blogPosts);
         }
-
-        // GET: BlogPosts/Details/5
-        //public ActionResult Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    BlogPost blogPost = db.BlogPosts.Find(id);
-        //    return View(blogPost);
-        //}
         public ActionResult Details(string slug)
         {
             if (String.IsNullOrWhiteSpace(slug))
@@ -49,8 +40,6 @@ namespace Blog.Controllers
             return View(blogPost);
 
         }
-
-        // GET: BlogPosts/Create
         public ActionResult Create()
         {
             if (User.Identity.IsAuthenticated)
@@ -70,10 +59,6 @@ namespace Blog.Controllers
                 return RedirectToAction("Error", "Home", new { errorText = "You must be logged in to continue." });
             }
         }
-
-        // POST: BlogPosts/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(BlogPost blogPost, HttpPostedFileBase uploadImage)
@@ -137,9 +122,6 @@ namespace Blog.Controllers
                 return RedirectToAction("Error", "Home", new { errorText = "There was a error with this action, let a system administartor know." });
             }
         }
-
-
-        // GET: BlogPosts/Edit/5
         public ActionResult Edit(string slug)
         {
 
@@ -161,11 +143,6 @@ namespace Blog.Controllers
                 return RedirectToAction("Error", "Home", new { errorText = "You must be logged in to continue." });
             }
         }
-
-        // POST: BlogPosts/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Title,Body,MediaLink,UpdateReason,Listed")] BlogPost blogPost, string slug, HttpPostedFileBase uploadImage)
@@ -204,8 +181,6 @@ namespace Blog.Controllers
                 return RedirectToAction("Error", "Home", new { errorText = "You must be logged in to continue." });
             }
         }
-
-        // POST: BlogPosts/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(string slug)
@@ -232,12 +207,24 @@ namespace Blog.Controllers
                 return RedirectToAction("Error", "Home", new { errorText = "You must be logged in to continue." });
             }
         }
-        public ActionResult Search(string searchText)
+        public ActionResult Search(string searchText, int? page)
         {
-            var viewModel = new SearchResultsViewModel();
-            viewModel.Comments = db.Comments.Where(x => x.Content.Contains(searchText)).ToList();
-            viewModel.BlogPosts = db.BlogPosts.Where(x => x.Title.Contains(searchText) || x.Body.Contains(searchText)).ToList();
-            return View("Results",viewModel);
+            ViewBag.Search = searchText;
+            int pageSize = 6;// display three blog posts at a time on this page
+            int pageNumber = (page ?? 1);
+            var comments = db.Comments.Where(x => x.Content.Contains(searchText) || 
+                                                  x.Author.FirstName.Contains(searchText) ||
+                                                  x.Author.LastName.Contains(searchText) ||
+                                                  x.Author.DisplayName.Contains(searchText)).ToList();
+            var blogposts = db.BlogPosts.Where(x => x.Title.Contains(searchText) || 
+                                                    x.Body.Contains(searchText) ||
+                                                    x.Author.FirstName.Contains(searchText) ||
+                                                    x.Author.LastName.Contains(searchText) ||
+                                                    x.Author.DisplayName.Contains(searchText)).ToList();
+            List<object> results = new List<object>();
+            results.AddRange(comments);
+            results.AddRange(blogposts);
+            return View("Results",results.ToPagedList(pageNumber,pageSize));
         }
         protected override void Dispose(bool disposing)
         {
@@ -246,6 +233,19 @@ namespace Blog.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public ActionResult ProfilePosts(string id, int? page)
+        {
+            int pageSize = 2;// display three blog posts at a time on this page
+            int pageNumber = (page ?? 1);
+            return PartialView(db.BlogPosts.Where(x => x.AuthorId == id).OrderByDescending(x=>x.CreateDate).ToPagedList(pageNumber, pageSize));
+        }
+        public ActionResult ProfileComments(string id, int? page)
+        {
+            int pageSize = 5;// display three blog posts at a time on this page
+            int pageNumber = (page ?? 1);
+            return PartialView(db.Comments.Where(x => x.AuthorId == id).OrderByDescending(x => x.CreateDate).ToPagedList(pageNumber,pageSize));
         }
     }
 }

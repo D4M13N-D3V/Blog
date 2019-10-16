@@ -13,7 +13,11 @@
         <div class="row">
             <div class="col-12">
                 <ul class="text-uppercase m-t-40 list-inline font-13 font-medium">
-                    <li><a href="#">@Model.Author.DisplayName</a></li>
+                    <li>
+
+                        <img class="d-flex mr-3 img-circle" src="@Model.Author.AvatarPath" width="60" height="60" alt="Generic placeholder image">
+                    </li>
+                    <li>@Html.ActionLink(Model.Author.DisplayName, "Profile", "Account", new { id = Model.AuthorId }, new { })</li>
 
                     @if (Model.UpdateDate.HasValue)
                     {
@@ -98,7 +102,7 @@ else
             @foreach (var comment in Model.Comments.OrderByDescending(c => c.CreateDate))
             {
                 <li class="media">
-                    <img class="d-flex mr-3 img-circle" src="https://thepowerofthedream.org/wp-content/uploads/2015/09/generic-profile-picture.jpg" width="60" alt="Generic placeholder image">
+                    <img class="d-flex mr-3 img-circle" src="@comment.Author.AvatarPath" width="60" height="60" alt="Generic placeholder image">
                     <div class="media-body">
                         <h5 class="mt-0 mb-1">@comment.Author.DisplayName</h5>
                         @Html.Raw(comment.Content)

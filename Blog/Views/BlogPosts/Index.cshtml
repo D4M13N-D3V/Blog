@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Blog.Models.BlogPost>
+﻿@model PagedList.IPagedList<Blog.Models.BlogPost>
+@using PagedList.Mvc;
 
 @{
     ViewBag.Title = "Articles";
@@ -22,13 +23,16 @@
         }
         else
         {
-            foreach (var blogPost in Model.Reverse())
+            foreach (var blogPost in Model)
             {
                 <div class="row" style="padding-top:5%;">
                     <div class="col-12">
                         <ul class="text-uppercase list-inline font-13 font-medium">
+                            @*<li>
+                                <img class="d-flex mr-3 img-circle" src="@blogPost.Author.AvatarPath" width="60" height="60" alt="Generic placeholder image">
+                            </li>*@
                             <li>@Html.ActionLink(blogPost.Author.DisplayName, "Profile", "Account", new { id = blogPost.AuthorId }, new { })</li>
-                            @if (blogPost.UpdateDate.HasValue)  
+                            @if (blogPost.UpdateDate.HasValue)
                             {
                                 <li><a href="#">Written @blogPost.CreateDate.Month/@blogPost.CreateDate.Day/@blogPost.CreateDate.Year / Updated @blogPost.UpdateDate.Value.Month/@blogPost.UpdateDate.Value.Day/@blogPost.UpdateDate.Value.Year ( @blogPost.UpdateReason )</a></li>
                             }
@@ -37,7 +41,7 @@
                                 <li><a href="#">Written @blogPost.CreateDate.Month/@blogPost.CreateDate.Day/@blogPost.CreateDate.Year</a></li>
                             }
                         </ul>
-                        <h2 class="title font-light"><a href="#" class="link">@blogPost.Title</a></h2>
+                        <h2 class="title font-light"><a href="@Url.Action("Details", new { slug = blogPost.Slug })" class="link">@blogPost.Title</a></h2>
                     </div>
                 </div>
                 <div class="row" style="padding-bottom:5%">
@@ -54,19 +58,30 @@
 
                             <img src="@blogPost.MediaLink" style="width:350px;height:225px" />
                         </div>
-                }
-                else
-                {
-                    <div class="col-12">
-                        <p class="m-t-30 m-b-30">@Html.Raw(blogPost.Summary)</p>
-                        <ul class="text-uppercase list-inline font-13 font-medium">
-                            @Html.ActionLink("CONTINUE READING", "Details", new { slug = blogPost.Slug })
-                        </ul>
-                    </div>
-                }
+                    }
+                    else
+                    {
+                        <div class="col-12">
+                            <p class="m-t-30 m-b-30">@Html.Raw(blogPost.Summary)</p>
+                            <ul class="text-uppercase list-inline font-13 font-medium">
+                                @Html.ActionLink("CONTINUE READING", "Details", new { slug = blogPost.Slug })
+                            </ul>
+                        </div>
+                    }
                 </div>
-                <hr />
+                <br />
+                <br />
+            }
 
-                }
-                }
-                </div>
+            <div class="text-center">
+                @Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+                    new PagedListRenderOptions
+                    {
+                        LinkToFirstPageFormat = "<<",
+                        LinkToPreviousPageFormat = "<",
+                        LinkToNextPageFormat = ">",
+                        LinkToLastPageFormat = ">>",
+                    })
+            </div>
+        }
+    </div>

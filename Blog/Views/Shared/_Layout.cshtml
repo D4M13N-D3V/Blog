@@ -47,9 +47,8 @@
                     <a href="@Url.Action("Index", "Home")" class="navbar-brand"><img src="~/Images/white-text.png" /></a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#h6-info" aria-controls="h6-info" aria-expanded="false" aria-label="Toggle navigation"><span class="ti-menu"></span></button>
                     <div class="collapse navbar-collapse hover-dropdown font-14 ml-auto" id="h6-info">
-                        @using (Html.BeginForm("Search", "BlogPosts", FormMethod.Post, new { @style = "display: inline-block;" }))
+                        @using (Html.BeginForm("Search", "BlogPosts", FormMethod.Get, new { @style = "display: inline-block;" }))
                         {
-                            @Html.AntiForgeryToken()
                             @Html.Editor("searchText", new { htmlAttributes = new { @placeholder = "Search", @class = "form-control", @style = "width:200px;height:20px;display: inline-block;" } })
                             <button class="btn-sm btn-primary" style="display: inline-block;"><i class="fa fa-search"></i></button>
 
@@ -112,7 +111,7 @@
                     <div class="row justify-content-center ">
                         <!-- Column -->
                         <div class="col-md-6 align-self-center text-center" data-aos="fade-down" data-aos-duration="1200">
-                            <h1 class="title">Damien Ostlers Blog</h1>
+                            <h1 class="title">@ConfigurationManager.AppSettings.Get("ApplicationName")</h1>
                             <h6 class="subtitle op-8">Read about what I learned about and how I put it to use weekly.</h6>
                         </div>
                         <!-- Column -->

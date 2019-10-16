@@ -1,0 +1,61 @@
+﻿@model PagedList.IPagedList<Blog.Models.BlogPost>
+@using PagedList.Mvc;
+@{
+    Layout = "~/Views/Shared/_NoNavbarLayout.cshtml";
+}
+
+
+@foreach (var blogPost in Model)
+{
+    <li class="media" style="padding-top:5%;">
+        <img class="d-flex mr-3 img-circle" src="https://thepowerofthedream.org/wp-content/uploads/2015/09/generic-profile-picture.jpg" width="60" alt="Generic placeholder image">
+        <div class="media-body">
+            <div class="row" style="padding-top:5%;">
+                <div class="col-12">
+                    <ul class="text-uppercase list-inline font-13 font-medium">
+                        <li><a href="#">Written @blogPost.CreateDate.Month @blogPost.CreateDate.Day, @blogPost.CreateDate.Year</a></li>
+                    </ul>
+                    <h2 class="title font-light"><a href="#" class="link">@blogPost.Title</a></h2>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom:5%">
+                <div class="col-6">
+                    <p class="m-t-30 m-b-30">@Html.Raw(blogPost.Summary)</p>
+                    <ul class="text-uppercase list-inline font-13 font-medium">
+                        @Html.ActionLink("CONTINUE READING", "Details", "BlogPosts", new { slug = blogPost.Slug }, null)
+                    </ul>
+                </div>
+                <div class="col-6">
+                    <img src="@blogPost.MediaLink" style="width:100%" />
+                </div>
+            </div>
+        </div>
+    </li>
+}
+<div class="text-center" id="postPager">
+    @Html.PagedListPager(Model, page => Url.Action("ProfilePosts", new { page }),
+        new PagedListRenderOptions
+        {
+            LinkToFirstPageFormat = "<<",
+            LinkToPreviousPageFormat = "<",
+            LinkToNextPageFormat = ">",
+            LinkToLastPageFormat = ">>",
+        })
+</div>
+
+@section Scripts{
+
+    <script>
+        $('#postPager').on('click', 'a', function () {
+            $.ajax({
+                url: this.href,
+                type: 'GET',
+                cache: false,
+                success: function (result) {
+                    $('#ProfilePosts').html(result);
+                }
+            });
+            return false;
+        });
+    </script>
+}

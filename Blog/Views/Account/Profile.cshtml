@@ -84,47 +84,11 @@
                 </div>
             </div>
             <div class="row" style="padding-top:2%">
-                <div class="col-6">
-                    @foreach (var blogPost in Model.BlogPosts)
-                    {
-                        <li class="media" style="padding-top:5%;">
-                            <img class="d-flex mr-3 img-circle" src="https://thepowerofthedream.org/wp-content/uploads/2015/09/generic-profile-picture.jpg" width="60" alt="Generic placeholder image">
-                            <div class="media-body">
-                                <div class="row" style="padding-top:5%;">
-                                    <div class="col-12">
-                                        <ul class="text-uppercase list-inline font-13 font-medium">
-                                            <li><a href="#">Written @blogPost.CreateDate.Month @blogPost.CreateDate.Day, @blogPost.CreateDate.Year</a></li>
-                                        </ul>
-                                        <h2 class="title font-light"><a href="#" class="link">@blogPost.Title</a></h2>
-                                    </div>
-                                </div>
-                                <div class="row" style="padding-bottom:5%">
-                                    <div class="col-6">
-                                        <p class="m-t-30 m-b-30">@Html.Raw(blogPost.Summary)</p>
-                                        <ul class="text-uppercase list-inline font-13 font-medium">
-                                            @Html.ActionLink("CONTINUE READING", "Details", "BlogPosts", new { slug = blogPost.Slug }, null)
-                                        </ul>
-                                    </div>
-                                    <div class="col-6">
-                                        <img src="@blogPost.MediaLink" style="width:100%" />
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    }
+                <div class="col-6" id="ProfilePosts">
+                    @{Html.RenderAction("ProfilePosts", "BlogPosts", new { id = Model.Id });}
                 </div>
-                <div class="col-6">
-                    @foreach (var comment in Model.Comments)
-                    {
-                        <li class="media">
-                            <img class="d-flex mr-3 img-circle" src="https://thepowerofthedream.org/wp-content/uploads/2015/09/generic-profile-picture.jpg" width="60" alt="Generic placeholder image">
-
-                            <div class="media-body">
-                                @Html.Raw(comment.Content)
-                                <a href="@Url.Action("Details","BlogPosts", new { slug=comment.BlogPost.Slug })"><button class="btn btn-outline-primary">View Related Article</button></a>
-                            </div>
-                        </li>
-                    }
+                <div class="col-6" id="ProfileComments">
+                    @{Html.RenderAction("ProfileComments", "BlogPosts", new { id = Model.Id });}
                 </div>
             </div>
         </div>
@@ -169,47 +133,11 @@ else
                 </div>
             </div>
             <div class="row" style="padding-top:2%">
-                <div class="col-6">
-                    @foreach (var blogPost in Model.BlogPosts)
-                    {
-                        <li class="media" style="padding-top:5%;">
-                            <img class="d-flex mr-3 img-circle" src="https://thepowerofthedream.org/wp-content/uploads/2015/09/generic-profile-picture.jpg" width="60" alt="Generic placeholder image">
-                            <div class="media-body">
-                                <div class="row" style="padding-top:5%;">
-                                    <div class="col-12">
-                                        <ul class="text-uppercase list-inline font-13 font-medium">
-                                            <li><a href="#">Written @blogPost.CreateDate.Month @blogPost.CreateDate.Day, @blogPost.CreateDate.Year</a></li>
-                                        </ul>
-                                        <h2 class="title font-light"><a href="#" class="link">@blogPost.Title</a></h2>
-                                    </div>
-                                </div>
-                                <div class="row" style="padding-bottom:5%">
-                                    <div class="col-6">
-                                        <p class="m-t-30 m-b-30">@Html.Raw(blogPost.Summary)</p>
-                                        <ul class="text-uppercase list-inline font-13 font-medium">
-                                            @Html.ActionLink("CONTINUE READING", "Details", "BlogPosts", new { slug = blogPost.Slug }, null)
-                                        </ul>
-                                    </div>
-                                    <div class="col-6">
-                                        <img src="@blogPost.MediaLink" style="width:100%" />
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    }
+                <div class="col-6" id="ProfilePosts">
+                    @{Html.RenderAction("ProfilePosts", "BlogPosts", new { id = Model.Id });}
                 </div>
-                <div class="col-6">
-                    @foreach (var comment in Model.Comments)
-                    {
-                        <li class="media">
-                            <img class="d-flex mr-3 img-circle" src="https://thepowerofthedream.org/wp-content/uploads/2015/09/generic-profile-picture.jpg" width="60" alt="Generic placeholder image">
-
-                            <div class="media-body">
-                                @Html.Raw(comment.Content)
-                                <a href="@Url.Action("Details","BlogPosts", new { slug=comment.BlogPost.Slug })"><button class="btn btn-outline-primary">View Related Article</button></a>
-                            </div>
-                        </li>
-                    }
+                <div class="col-6" id="ProfileComments">
+                    @{Html.RenderAction("ProfileComments", "BlogPosts", new { id = Model.Id });}
                 </div>
             </div>
         </div>

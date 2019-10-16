@@ -1,0 +1,35 @@
+﻿@model PagedList.IPagedList<Blog.Models.Comment>
+@using PagedList.Mvc;
+@{
+    Layout = "~/Views/Shared/_NoNavbarLayout.cshtml";
+}
+        @foreach (var comment in Model)
+        {
+            <li class="media">
+                <img class="d-flex mr-3 img-circle" src="https://thepowerofthedream.org/wp-content/uploads/2015/09/generic-profile-picture.jpg" width="60" alt="Generic placeholder image">
+
+                <div class="media-body">
+                    @Html.Raw(comment.Content)
+                    <a href="@Url.Action("Details","BlogPosts", new { slug=comment.BlogPost.Slug })"><button class="btn btn-outline-primary">View Related Article</button></a>
+                </div>
+            </li>
+        }
+        <div class="text-center" id="commentsPager">
+            @Html.PagedListPager(Model, page => Url.Action("ProfileComments", new { page }))
+        </div>  
+@section Scripts{
+
+    <script>
+        $('#commentsPager').on('click', 'a', function () {
+            $.ajax({
+                url: this.href,
+                type: 'GET',
+                cache: false,
+                success: function (result) {
+                    $('#ProfileComments').html(result);
+                }
+            });
+            return false;
+        });
+    </script>
+}
