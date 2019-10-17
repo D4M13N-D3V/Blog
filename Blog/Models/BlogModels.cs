@@ -29,7 +29,6 @@ namespace Blog.Models
             // working with data. could use list of comments .
             Comments = new HashSet<Comment>();
         }
-
         public int Id { get; set; }
         public string AuthorId { get; set; }
         public string Title { get; set; }
@@ -41,6 +40,7 @@ namespace Blog.Models
         public DateTime? UpdateDate { get; set; }
         public string UpdateReason { get; set; }
         public string MediaLink { get; set; }
+        public int ViewCount { get; set; }
         public bool Listed { get; set; }
         //Virtual Navigation  ( make sure there are references to the parents and children types and are able to store it )
         public virtual ICollection<Comment> Comments { get; set; }

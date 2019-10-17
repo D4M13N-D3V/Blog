@@ -27,6 +27,9 @@
                     {
                         <li><a href="#">Written @Model.CreateDate.Month/@Model.CreateDate.Day/@Model.CreateDate.Year</a></li>
                     }
+                    <li>
+                        (Views @Model.ViewCount)
+                    </li>
                     @if (User.IsInRole("Admin") || User.Identity.GetUserId() == Model.AuthorId)
                     {
 

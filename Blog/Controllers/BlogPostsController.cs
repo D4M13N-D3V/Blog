@@ -37,6 +37,8 @@ namespace Blog.Controllers
             {
                 return HttpNotFound();
             }
+            blogPost.ViewCount++;
+            db.SaveChanges();
             return View(blogPost);
 
         }
@@ -79,6 +81,7 @@ namespace Blog.Controllers
                         if (db.BlogPosts.Any(p => p.Slug == Slug)) { ModelState.AddModelError("Title", "The title must be unique"); return View(blogPost); }
                         blogPost.AuthorId = User.Identity.GetUserId();
                         blogPost.Slug = Slug;
+                        blogPost.ViewCount = 0;
                         blogPost.CreateDate = DateTime.Now;
                         db.BlogPosts.Add(blogPost);
                         db.SaveChanges();
