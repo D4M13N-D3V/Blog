@@ -7,6 +7,9 @@
         {
             <li class="media">
                 <div class="media-body">
+                    <ul class="text-uppercase list-inline font-13 font-medium">
+                        <li><a href="#">Written @comment.CreateDate.Month @comment.CreateDate.Day, @comment.CreateDate.Year</a></li>
+                    </ul>
                     @Html.Raw(comment.Content)
                     <a href="@Url.Action("Details","BlogPosts", new { slug=comment.BlogPost.Slug })"><button class="btn btn-outline-primary">View Related Article</button></a>
                 </div>
