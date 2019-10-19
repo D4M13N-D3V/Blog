@@ -63,7 +63,7 @@
                                 <div class="p-30">
                                     @if (blogPost.MediaLink != null)
                                     {
-                                        <a href="#"><img class="card-img-top" src="@blogPost.MediaLink" alt="wrappixel kit"></a>
+                                        <a href="@Url.Action("Details", "BlogPosts", new { slug = blogPost.Slug })"><img class="card-img-top" src="@blogPost.MediaLink" alt="wrappixel kit"></a>
                                     }
                                     else
                                     {

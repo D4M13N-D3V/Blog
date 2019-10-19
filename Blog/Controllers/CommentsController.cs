@@ -49,7 +49,7 @@ namespace Blog.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 var updatedComment = db.Comments.Find(commentId);
-                if (User.IsInRole("Moderator") || User.IsInRole("Admin") || User.Identity.GetUserId()==comment.AuthorId)
+                if (User.IsInRole("Moderator") || User.IsInRole("Admin") || User.Identity.GetUserId()== updatedComment.AuthorId)
                 {
                     updatedComment.Content = comment.Content;
                     updatedComment.UpdateDate = DateTime.Now;
@@ -73,11 +73,12 @@ namespace Blog.Controllers
         [HttpPost]
         public ActionResult Delete(int deletedCommentId)
         {
+
+            Comment comment = db.Comments.Find(deletedCommentId);
             if (User.Identity.IsAuthenticated)
             {
-                if (User.IsInRole("Moderator") || User.IsInRole("Admin"))
+                if (User.IsInRole("Moderator") || User.IsInRole("Admin") || comment.AuthorId==User.Identity.GetUserId())
                 {
-                    Comment comment = db.Comments.Find(deletedCommentId);
                     var blogSlug = comment.BlogPost.Slug;
                     db.Comments.Remove(comment);
                     db.SaveChanges();
