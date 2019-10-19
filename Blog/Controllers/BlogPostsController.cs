@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -12,6 +13,7 @@ using Blog.Models;
 using Blog.Utilities;
 using Microsoft.AspNet.Identity;
 using PagedList;
+using Utilities;
 
 namespace Blog.Controllers
 { [RequireHttps]
@@ -37,9 +39,42 @@ namespace Blog.Controllers
             {
                 return HttpNotFound();
             }
+            //SqlParameter param1 = new SqlParameter("@blogpostid", blogPost.Id);
+            //List<Comment> result = db.Database.SqlQuery<Comment>("exec SelectCommentsByBlogpost  @blogpostid", param1).Where(x=>x.BlogPostId==blogPost.Id).Reverse().ToList();
+
+            var result = db.Comments.Where(x => x.BlogPostId == blogPost.Id).OrderBy(x=>x.ParentID).ToList();//OrderByDescending(x => x.CreateDate)
+            var root = new TreeNode<Comment>(new Comment { Id = 0 });
+            var currentNode = root;
+
+            while (result.Any())
+            {
+                for(int i=0; i<result.Count; i++)
+                {
+                    if (currentNode.Children.Any(x => x.Data.Id == result[i].ParentID) )
+                    {
+                        currentNode.FirstOrDefault(x => x.Data.Id == result[i].ParentID).AddChild(result[i]);
+                        //currentNode.FirstOrDefault(x => x.Data.Id == result[i].ParentID).Children = currentNode.FirstOrDefault(x => x.Data.Id == result[i].ParentID).OrderByDescending(x => x.Data.CreateDate).ToList();
+                        result.Remove(result[i]);
+                    }
+                    else if(currentNode.Data.Id == result[i].ParentID)
+                    {
+                        currentNode.AddChild(result[i]);
+                        //currentNode.Children = currentNode.Children.OrderByDescending(x => x.Data.CreateDate).ToList();
+                        result.Remove(result[i]);
+                    }
+                }
+            }
+
+            var viewmodel = new BlogPostDetailsViewModel
+            {
+                BlogPost = blogPost,
+                CommentTree = root,
+                CommentCount = result.Count
+            };
+
             blogPost.ViewCount++;
             db.SaveChanges();
-            return View(blogPost);
+            return View(viewmodel);
 
         }
         public ActionResult Create()
@@ -125,7 +160,7 @@ namespace Blog.Controllers
             {
                 return RedirectToAction("Error", "Home", new { errorText = "There was a error with this action, let a system administartor know." });
             }
-        }
+        }   
         public ActionResult Edit(string slug)
         {
 

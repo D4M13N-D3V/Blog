@@ -18,7 +18,7 @@
                     @Html.Hidden("profileId", Model.Id)
                     <img src="@Model.AvatarPath" class="img-circle center" id="avatarImage" style="width:252px;height:252px" />
                 </div>
-                <div class="row">
+                <div class="row" style="padding-top:5%">
                     <div class="col-12">
                         <input name="uploadImage" type="file" id="uploadImage" />
                     </div>
@@ -38,14 +38,19 @@
                     </div>
                 </div>
             </div>
+            @using (Html.BeginForm("EditDisplayName", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("profileId", Model.Id  )
             <div class="row">
                 <div class="col-6">
-                    @Html.Editor("newDisplayName", Model.DisplayName, new { htmlAttributes = new { @Value = Model.DisplayName, @class = "form-control pull-right", @style = "width:75%" } })
+                    @Html.Editor("newDisplayName", Model.DisplayName, new { htmlAttributes = new { @maxlength = "30", @Value = Model.DisplayName, @class = "form-control pull-right", @style = "width:75%" } })
                 </div>
                 <div class="col-6">
                     <button class="btn btn-outline-success pull-left" style="width:75%">Update Display Name</button>
                 </div>
             </div>
+            }
             <div class="row" style="padding-top:4%">
                 <div class="col-12">
                     <div class="text-center">

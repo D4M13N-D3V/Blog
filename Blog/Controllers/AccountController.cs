@@ -73,7 +73,7 @@ namespace Blog.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditDisplayName(string profileId, string newDisplayName)
         {
-            if(User.IsInRole("Admin") || User.Identity.IsAuthenticated && User.Identity.GetUserId() == profileId)
+            if(newDisplayName!=null && User.IsInRole("Admin") || User.Identity.IsAuthenticated && User.Identity.GetUserId() == profileId)
             {
                 var user = UserManager.FindById(profileId);
                 user.DisplayName = newDisplayName;
@@ -90,7 +90,7 @@ namespace Blog.Controllers
         [ValidateInput(false)]
         public ActionResult EditBio(string profileId, string newBio)
         {
-            if (User.IsInRole("Admin") || User.Identity.IsAuthenticated && User.Identity.GetUserId() == profileId)
+            if (newBio != null && User.IsInRole("Admin") || User.Identity.IsAuthenticated && User.Identity.GetUserId() == profileId)
             {
                 var user = UserManager.FindById(profileId);
                 user.Bio = newBio;
@@ -106,7 +106,7 @@ namespace Blog.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditImage(string profileId, HttpPostedFileBase uploadImage)
         {
-            if (User.IsInRole("Admin") || User.Identity.IsAuthenticated && User.Identity.GetUserId() == profileId)
+            if ( User.IsInRole("Admin") || User.Identity.IsAuthenticated && User.Identity.GetUserId() == profileId)
             {
                 var user = UserManager.FindById(profileId);
 
@@ -116,6 +116,10 @@ namespace Blog.Controllers
                     var path = Path.Combine(Server.MapPath("~/Uploads/"), fileName);
                     uploadImage.SaveAs(path);
                     user.AvatarPath = "/Uploads/" + fileName;
+                }
+                else
+                {
+                    return RedirectToAction("Error", "Home", new { errorText = "Invalid image provided." });
                 }
 
                 UserManager.Update(user);

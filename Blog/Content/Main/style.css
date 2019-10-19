@@ -49,6 +49,10 @@ Preloader
 
 }
 
+.li.media.nested{
+    padding-left:5%
+}
+
 .preloader {
     width: 100%;
     height: 100%;

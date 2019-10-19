@@ -1,5 +1,7 @@
-﻿@using Microsoft.AspNet.Identity
-@model Blog.Models.BlogPost
+﻿@using Utilities
+@using Microsoft.AspNet.Identity
+@using Blog.Models
+@model Blog.Models.BlogPostDetailsViewModel
 
 @{
     ViewBag.Title = "Article";
@@ -15,54 +17,54 @@
                 <ul class="text-uppercase m-t-40 list-inline font-13 font-medium">
                     <li>
 
-                        <img class="d-flex mr-3 img-circle" src="@Model.Author.AvatarPath" width="60" height="60" alt="Generic placeholder image">
+                        <img class="d-flex mr-3 img-circle" src="@Model.BlogPost.Author.AvatarPath" width="60" height="60" alt="Generic placeholder image">
                     </li>
-                    <li>@Html.ActionLink(Model.Author.DisplayName, "Profile", "Account", new { id = Model.AuthorId }, new { })</li>
+                    <li>@Html.ActionLink(Model.BlogPost.Author.DisplayName, "Profile", "Account", new { id = Model.BlogPost.AuthorId }, new { })</li>
 
-                    @if (Model.UpdateDate.HasValue)
+                    @if (Model.BlogPost.UpdateDate.HasValue)
                     {
-                        <li><a href="#">Written @Model.CreateDate.Month/@Model.CreateDate.Day/@Model.CreateDate.Year / Updated @Model.UpdateDate.Value.Month @Model.UpdateDate.Value.Day, @Model.UpdateDate.Value.Year ( @Model.UpdateReason )</a></li>
+                        <li><a href="#">Written @Model.BlogPost.CreateDate.Month/@Model.BlogPost.CreateDate.Day/@Model.BlogPost.CreateDate.Year / Updated @Model.BlogPost.UpdateDate.Value.Month @Model.BlogPost.UpdateDate.Value.Day, @Model.BlogPost.UpdateDate.Value.Year ( @Model.BlogPost.UpdateReason )</a></li>
                     }
                     else
                     {
-                        <li><a href="#">Written @Model.CreateDate.Month/@Model.CreateDate.Day/@Model.CreateDate.Year</a></li>
+                        <li><a href="#">Written @Model.BlogPost.CreateDate.Month/@Model.BlogPost.CreateDate.Day/@Model.BlogPost.CreateDate.Year</a></li>
                     }
                     <li>
-                        (Views @Model.ViewCount)
+                        (Views @Model.BlogPost.ViewCount)
                     </li>
-                    @if (User.IsInRole("Admin") || User.Identity.GetUserId() == Model.AuthorId)
+                    @if (User.IsInRole("Admin") || User.Identity.GetUserId() == Model.BlogPost.AuthorId)
                     {
 
                         <li>
-                            <a href="@Url.Action("Edit", new { slug = Model.Slug })"><button class="btn-sm btn-outline-warning">Edit</button></a>
+                            <a href="@Url.Action("Edit", new { slug = Model.BlogPost.Slug })"><button class="btn-sm btn-outline-warning">Edit</button></a>
                         </li>
                         <li>
                             @using (Html.BeginForm("Delete", "BlogPosts", FormMethod.Post, new { }))
                             {
                                 @Html.AntiForgeryToken()
-                                @Html.Hidden("slug", Model.Slug);
+                                @Html.Hidden("slug", Model.BlogPost.Slug);
                                 <button class="btn-sm btn-outline-danger" type="submit">Delete</button>
                             }
 
                         </li>
                     }
                 </ul>
-                <h2 class="title font-light"><a href="#" class="link">@Model.Title</a></h2>
-                @Html.Raw(Model.Body)
+                <h2 class="title font-light"><a href="#" class="link">@Model.BlogPost.Title</a></h2>
+                @Html.Raw(Model.BlogPost.Body)
                 <br />
-                @if (Model.MediaLink != null)
+                @if (Model.BlogPost.MediaLink != null)
                 {
-                    <img src="@Model.MediaLink" style="width:100%" />
+                    <img src="@Model.BlogPost.MediaLink" style="width:100%" />
                 }
             </div>
         </div>
         <br />
         @if (User.Identity.IsAuthenticated)
         {
-           using(Html.BeginForm("Create", "Comments", FormMethod.Post, new { @class = "form-control" }))
+            using (Html.BeginForm("Create", "Comments", FormMethod.Post, new { @class = "form-control" }))
             {
                 @Html.AntiForgeryToken()
-                @Html.Hidden("BlogPostId", Model.Id);
+                @Html.Hidden("BlogPostId", Model.BlogPost.Id);
                 <div class="row">
                     <div class="col-12">
                         @Html.Editor("newCommentContent", new { htmlAttributes = new { @class = "mceEditor", @placeholder = "Enter comment here.", @rows = 5, @cols = 10 } })
@@ -77,7 +79,7 @@
         }
     </div>
 </div>
-@if (Model.Comments.Count <= 0)
+@if (Model.CommentTree.Children.Count <= 0)
 {
     <div class="row justify-content-center" style="padding-top:5%">
         <div class="col-8">
@@ -100,65 +102,280 @@
 else
 {
     <div class="col-6 offset-3">
-        <h3>Comments (@Model.Comments.Count)</h3>
-        <ul class="list-    unstyled with-noborder m-t-30">
-            @foreach (var comment in Model.Comments.OrderByDescending(c => c.CreateDate))
-            {
-                <li class="media">
-                    <img class="d-flex mr-3 img-circle" src="@comment.Author.AvatarPath" width="60" height="60" alt="Generic placeholder image">
-                    <div class="media-body">
-                        <h5 class="mt-0 mb-1">@comment.Author.DisplayName</h5>
-                        @Html.Raw(comment.Content)
-                        @if (comment.UpdateDate.HasValue)
-                        {
-                            <p>* Edited @comment.UpdateDate ( @comment.UpdateReason )*</p>
-                        }
-                    </div>
-                    @if (User.IsInRole("Moderator") || User.IsInRole("Admin") || User.Identity.GetUserId()==comment.AuthorId)
+        <h3>Comments (@Model.CommentCount)</h3>
+        <ul class="list-unstyled with-noborder m-t-30">
+            @{
+                foreach (TreeNode<Comment> node in Model.CommentTree)
+                {
+                    if (node != null && !node.IsRoot)
                     {
-                        using (Html.BeginForm("Delete", "Comments", FormMethod.Post, new {}))
+                        if (node.Data.ParentID == 0)
                         {
-                                @Html.AntiForgeryToken()
-                                @Html.Hidden("deletedCommentId", comment.Id);
-                                <button type="submit" class="btn-sm btn-danger">Delete</button>
-                        }
-                        <button type="button" class="btn-sm btn-warning" data-toggle="modal" data-target="#comment-@comment.Id">Edit</button>
-                        <div class="modal fade bd-example-modal-lg" id="comment-@comment.Id" tabindex="-1" role="dialog" aria-labelledby="comment- @comment.Id" aria-hidden="true">
-                            <div class="modal-dialog modal-lg">
-                                <div class="modal-content">
-                                    <div class="container">
-                                        <div class="row" style="padding-top:2%">
-                                            <div class="col-12">
-                                                @using (Html.BeginForm("Edit", "Comments", FormMethod.Post, new { @class = "form-control" }))
-                                                {
-                                                    @Html.AntiForgeryToken()
-                                                    @Html.Hidden("commentId", comment.Id);
-                                                    @Html.Hidden("UpdateDate", comment.UpdateDate);
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            @Html.Editor("UpdateReason", new { htmlAttributes = new { @class = "form-control", @placeholder = "Update reason", @rows = 5, @cols = 10 } })
-                                                        </div>
-                                                    </div>
+
+                            <li class="media nested">
+                                <img class="d-flex mr-3 img-circle" src="@node.Data.Author.AvatarPath" width="60" height="60" alt="Generic placeholder image">
+                                <div class="media-body">
+                                    <h5 class="mt-0 mb-1">@node.Data.Author.DisplayName</h5>
+                                    <p>@node.Data.CreateDate</p>
+                                    @Html.Raw(node.Data.Content)
+                                    @if (node.Data.UpdateDate.HasValue)
+                                    {
+                                        <p>* Edited @node.Data.UpdateDate ( @node.Data.UpdateReason )*</p>
+                                    }
+                                </div>
+
+
+                                @if (node.Data.ParentID == 0)
+                                {
+                                    <button type="button" class="btn-sm btn-primary" data-toggle="modal" data-target="#comment-@node.Data.Id">Reply</button>
+                                    <div class="modal fade bd-example-modal-lg" id="comment-@node.Data.Id" tabindex="-1" role="dialog" aria-labelledby="comment- @node.Data.Id" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="container">
                                                     <div class="row" style="padding-top:2%">
                                                         <div class="col-12">
-                                                            @Html.Editor("Content", new { htmlAttributes = new { @class = "mceEditor", @Value = comment.Content, @placeholder = "Enter comment here.", @rows = 5, @cols = 10 } })
+                                                            @using (Html.BeginForm("Create", "Comments", FormMethod.Post, new { @class = "form-control" }))
+                                                            {
+                                                                @Html.AntiForgeryToken()
+                                                                @Html.Hidden("BlogPostId", Model.BlogPost.Id);
+                                                                @Html.Hidden("ParentID", node.Data.Id);
+                                                                <div class="row" style="padding-top:2%">
+                                                                    <div class="col-12">
+                                                                        @Html.Editor("newCommentContent", new { htmlAttributes = new { @class = "mceEditor", @placeholder = "Enter comment here.", @rows = 5, @cols = 10 } })
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row" style="padding-top:2%; padding-bottom:2%">
+                                                                    <div class="col">
+                                                                        <button type="submit" class="btn btn-info waves-effect waves-light m-r-10">Submit</button>
+                                                                    </div>
+                                                                </div>
+                                                            }
                                                         </div>
                                                     </div>
-                                                    <div class="row" style="padding-top:2%; padding-bottom:2%">
-                                                        <div class="col">
-                                                            <button type="submit" class="btn btn-info waves-effect waves-light m-r-10">Submit</button>
-                                                        </div>
-                                                    </div>
-                                                }
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+                                }
+
+                                @if (User.IsInRole("Moderator") || User.IsInRole("Admin") || User.Identity.GetUserId() == node.Data.AuthorId)
+                                {
+                                    using (Html.BeginForm("Delete", "Comments", FormMethod.Post, new { }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        @Html.Hidden("deletedCommentId", node.Data.Id);
+                                        <button type="submit" class="btn-sm btn-danger">Delete</button>
+                                    }
+                                    <button type="button" class="btn-sm btn-warning" data-toggle="modal" data-target="#commentReply-@node.Data.Id">Edit</button>
+                                    <div class="modal fade bd-example-modal-lg" id="commentReply-@node.Data.Id" tabindex="-1" role="dialog" aria-labelledby="comment- @node.Data.Id" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="container">
+                                                    <div class="row" style="padding-top:2%">
+                                                        <div class="col-12">
+                                                            @using (Html.BeginForm("Edit", "Comments", FormMethod.Post, new { @class = "form-control" }))
+                                                            {
+                                                                @Html.AntiForgeryToken()
+                                                                @Html.Hidden("commentId", node.Data.Id);
+                                                                @Html.Hidden("UpdateDate", node.Data.UpdateDate);
+                                                                <div class="row" style="padding-top:2%">
+                                                                    <div class="col-12">
+                                                                        @Html.Editor("Content", new { htmlAttributes = new { @class = "mceEditor", @Value = node.Data.Content, @placeholder = "Enter comment here.", @rows = 5, @cols = 10 } })
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row" style="padding-top:2%; padding-bottom:2%">
+                                                                    <div class="col">
+                                                                        <button type="submit" class="btn btn-info waves-effect waves-light m-r-10">Submit</button>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </li>
+                        }
+                        else
+                        {
+
+                            <li class="media" style="padding-left:20%">
+                                <img class="d-flex mr-3 img-circle" src="@node.Data.Author.AvatarPath" width="60" height="60" alt="Generic placeholder image">
+                                <div class="media-body">
+                                    <h5 class="mt-0 mb-1">@node.Data.Author.DisplayName</h5>
+                                    <p>@node.Data.CreateDate</p>
+                                    @Html.Raw(node.Data.Content)
+                                    @if (node.Data.UpdateDate.HasValue)
+                                    {
+                                        <p>* Edited @node.Data.UpdateDate ( @node.Data.UpdateReason )*</p>
+                                    }
                                 </div>
-                            </div>
-                        </div>
+
+
+                                @if (node.Data.ParentID == 0)
+                                {
+                                    <button type="button" class="btn-sm btn-primary" data-toggle="modal" data-target="#comment-@node.Data.Id">Reply</button>
+                                    <div class="modal fade bd-example-modal-lg" id="comment-@node.Data.Id" tabindex="-1" role="dialog" aria-labelledby="comment- @node.Data.Id" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="container">
+                                                    <div class="row" style="padding-top:2%">
+                                                        <div class="col-12">
+                                                            @using (Html.BeginForm("Create", "Comments", FormMethod.Post, new { @class = "form-control" }))
+                                                            {
+                                                                @Html.AntiForgeryToken()
+                                                                @Html.Hidden("BlogPostId", Model.BlogPost.Id);
+                                                                @Html.Hidden("ParentID", node.Data.Id);
+                                                                <div class="row" style="padding-top:2%">
+                                                                    <div class="col-12">
+                                                                        @Html.Editor("newCommentContent", new { htmlAttributes = new { @class = "mceEditor", @placeholder = "Enter comment here.", @rows = 5, @cols = 10 } })
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row" style="padding-top:2%; padding-bottom:2%">
+                                                                    <div class="col">
+                                                                        <button type="submit" class="btn btn-info waves-effect waves-light m-r-10">Submit</button>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                                @if (User.IsInRole("Moderator") || User.IsInRole("Admin") || User.Identity.GetUserId() == node.Data.AuthorId)
+                                {
+                                    using (Html.BeginForm("Delete", "Comments", FormMethod.Post, new { }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        @Html.Hidden("deletedCommentId", node.Data.Id);
+                                        <button type="submit" class="btn-sm btn-danger">Delete</button>
+                                    }
+                                    <button type="button" class="btn-sm btn-warning" data-toggle="modal" data-target="#commentReply-@node.Data.Id">Edit</button>
+                                    <div class="modal fade bd-example-modal-lg" id="commentReply-@node.Data.Id" tabindex="-1" role="dialog" aria-labelledby="comment- @node.Data.Id" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="container">
+                                                    <div class="row" style="padding-top:2%">
+                                                        <div class="col-12">
+                                                            @using (Html.BeginForm("Edit", "Comments", FormMethod.Post, new { @class = "form-control" }))
+                                                            {
+                                                                @Html.AntiForgeryToken()
+                                                                @Html.Hidden("commentId", node.Data.Id);
+                                                                @Html.Hidden("UpdateDate", node.Data.UpdateDate);
+                                                                <div class="row" style="padding-top:2%">
+                                                                    <div class="col-12">
+                                                                        @Html.Editor("Content", new { htmlAttributes = new { @class = "mceEditor", @Value = node.Data.Content, @placeholder = "Enter comment here.", @rows = 5, @cols = 10 } })
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row" style="padding-top:2%; padding-bottom:2%">
+                                                                    <div class="col">
+                                                                        <button type="submit" class="btn btn-info waves-effect waves-light m-r-10">Submit</button>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </li>
+                        }
                     }
-                </li>
+                }
             }
         </ul>
     </div>
 }
+
+
+@*@foreach (var comment in Model.Comments.OrderByDescending(c => c.CreateDate))
+    {
+        <li class="media">
+            <img class="d-flex mr-3 img-circle" src="@comment.Author.AvatarPath" width="60" height="60" alt="Generic placeholder image">
+            <div class="media-body">
+                <h5 class="mt-0 mb-1">@comment.Author.DisplayName</h5>
+                @Html.Raw(comment.Content)
+                @if (comment.UpdateDate.HasValue)
+                {
+                    <p>* Edited @comment.UpdateDate ( @comment.UpdateReason )*</p>
+                }
+            </div>
+
+
+            <button type="button" class="btn-sm btn-primary" data-toggle="modal" data-target="#comment-@comment.Id">Reply</button>
+            <div class="modal fade bd-example-modal-lg" id="comment-@comment.Id" tabindex="-1" role="dialog" aria-labelledby="comment- @comment.Id" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="container">
+                            <div class="row" style="padding-top:2%">
+                                <div class="col-12">
+                                    @using (Html.BeginForm("Create", "Comments", FormMethod.Post, new { @class = "form-control" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        @Html.Hidden("BlogPostId", Model.BlogPost.Id);
+                                        @Html.Hidden("ParentID", comment.Id);
+                                        <div class="row" style="padding-top:2%">
+                                            <div class="col-12">
+                                                @Html.Editor("newCommentContent", new { htmlAttributes = new { @class = "mceEditor", @placeholder = "Enter comment here.", @rows = 5, @cols = 10 } })
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-top:2%; padding-bottom:2%">
+                                            <div class="col">
+                                                <button type="submit" class="btn btn-info waves-effect waves-light m-r-10">Submit</button>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (User.IsInRole("Moderator") || User.IsInRole("Admin") || User.Identity.GetUserId() == comment.AuthorId)
+            {
+                using (Html.BeginForm("Delete", "Comments", FormMethod.Post, new { }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("deletedCommentId", comment.Id);
+                    <button type="submit" class="btn-sm btn-danger">Delete</button>
+                }
+                <button type="button" class="btn-sm btn-warning" data-toggle="modal" data-target="#commentReply-@comment.Id">Edit</button>
+                <div class="modal fade bd-example-modal-lg" id="commentReply-@comment.Id" tabindex="-1" role="dialog" aria-labelledby="comment- @comment.Id" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="container">
+                                <div class="row" style="padding-top:2%">
+                                    <div class="col-12">
+                                        @using (Html.BeginForm("Edit", "Comments", FormMethod.Post, new { @class = "form-control" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            @Html.Hidden("commentId", comment.Id);
+                                            @Html.Hidden("UpdateDate", comment.UpdateDate);
+                                            <div class="row" style="padding-top:2%">
+                                                <div class="col-12">
+                                                    @Html.Editor("Content", new { htmlAttributes = new { @class = "mceEditor", @Value = comment.Content, @placeholder = "Enter comment here.", @rows = 5, @cols = 10 } })
+                                                </div>
+                                            </div>
+                                            <div class="row" style="padding-top:2%; padding-bottom:2%">
+                                                <div class="col">
+                                                    <button type="submit" class="btn btn-info waves-effect waves-light m-r-10">Submit</button>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </li>
+    }*@

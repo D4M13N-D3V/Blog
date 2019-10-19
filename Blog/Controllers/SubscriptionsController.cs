@@ -20,17 +20,16 @@ namespace Blog.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Subscription subscription, string subemail)
+        public ActionResult Create([Bind(Include = "Email")]Subscription subscription)
         {
-            if (db.Subscriptions.FirstOrDefault(x => x.Email == subemail) != null) return View("Exists");
-            if (subemail != null)
+            if (ModelState.IsValid)
             {
-                subscription.Email = subemail;
+                if (db.Subscriptions.FirstOrDefault(x => x.Email == subscription.Email) != null) return View("Exists");
                 db.Subscriptions.Add(subscription);
                 db.SaveChanges();
                 return View("SubscriptionSuccess");
             }
-            return RedirectToAction("Error", "Home", new { errorText="Invalid name or email provided!" });
+            return RedirectToAction("Error", "Home", new { errorText="Invalid email provided!" });
         }
 
         // POST: Subscriptions/Delete/5

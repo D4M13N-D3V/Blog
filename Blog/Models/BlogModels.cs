@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Blog.Utilities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Utilities;
 
 namespace Blog.Models
 {
@@ -12,12 +14,8 @@ namespace Blog.Models
     public class BlogPostDetailsViewModel
     {
         public BlogPost BlogPost { get; set; }
-        public ICollection<Comment> Comments { get; set; }
-        public Comment CreatedComment { get; set; }
-
-        public BlogPostDetailsViewModel(){
-            Comments = new HashSet<Comment>();
-        }
+        public TreeNode<Comment> CommentTree { get; set; }
+        public int CommentCount { get; set; }
     }
 
     public class BlogPost
@@ -63,7 +61,6 @@ namespace Blog.Models
         //Virtual Navigation  ( make sure there are references to the parents and children types and are able to store it )
         public virtual BlogPost BlogPost { get; set; }
         public virtual ApplicationUser Author { get; set; }
-        public int Reputation { get; set; }
     }
 
     public class UpdateLog
@@ -109,4 +106,9 @@ namespace Blog.Models
         [Required(ErrorMessage = "Your email address is required!")]
         public string Email { get; set; }
     }
+    public class CommentWithLevel:Comment
+    {
+        public int Level { get; set; }
+    }
+
 }
