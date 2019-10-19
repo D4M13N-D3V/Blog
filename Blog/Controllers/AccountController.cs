@@ -231,7 +231,7 @@ namespace Blog.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { AvatarPath = Utilities.Utilities.GetGravatarLinkFromEmail(model.Email,60),Reputation=0, UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName=model.LastName, DisplayName=model.DisplayName };
+                var user = new ApplicationUser { AvatarPath = Utilities.Utilities.GetGravatarLinkFromEmail(model.Email, 512),Reputation=0, UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName=model.LastName, DisplayName=model.DisplayName };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -441,7 +441,7 @@ namespace Blog.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl)
+        public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl, string DisplayName, string FirstName, string LastName)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -456,7 +456,7 @@ namespace Blog.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { AvatarPath = Utilities.Utilities.GetGravatarLinkFromEmail(model.Email, 60), UserName = model.Email, Email = model.Email, Reputation = 0 };
+                var user = new ApplicationUser { FirstName=FirstName, LastName=LastName, DisplayName=DisplayName, AvatarPath = Utilities.Utilities.GetGravatarLinkFromEmail(model.Email, 512), UserName = model.Email, Email = model.Email, Reputation = 0 };
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
