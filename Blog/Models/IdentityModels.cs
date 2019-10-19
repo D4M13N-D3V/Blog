@@ -23,6 +23,7 @@ namespace Blog.Models
         public string AvatarPath { get; set; }
         public string Bio { get; set; }
         public bool Muted { get; set; }
+        public int Reputation { get; set; }
         public virtual ICollection<BlogPost> BlogPosts { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<MuteLog> MuteLogs { get; set; }

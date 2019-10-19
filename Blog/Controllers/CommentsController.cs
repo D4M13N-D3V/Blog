@@ -33,6 +33,7 @@ namespace Blog.Controllers
                 comment.AuthorId = User.Identity.GetUserId();
                 comment.Content = newCommentContent;
                 comment.CreateDate = DateTime.Now;
+                comment.Reputation = 0;
                 db.Comments.Add(comment);
                 db.SaveChanges();
                 return RedirectToAction("Details", "BlogPosts", new { slug = db.BlogPosts.FirstOrDefault(x => x.Id == comment.BlogPostId).Slug });

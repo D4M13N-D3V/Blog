@@ -8,7 +8,7 @@
 }
 
 
-@using (Html.BeginForm("Edit", "BlogPosts", FormMethod.Post, new { @class = "form-control" }))
+@using (Html.BeginForm("Edit", "BlogPosts", FormMethod.Post, new { enctype = "multipart/form-data",@class = "form-control" }))
 {
     @Html.AntiForgeryToken()
     @Html.Hidden("Id", Model.Id)

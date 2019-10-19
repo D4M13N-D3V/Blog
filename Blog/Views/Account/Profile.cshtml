@@ -7,144 +7,129 @@
 
 @if (Model.Id == User.Identity.GetUserId() || User.IsInRole("Admin"))
 {
-    <div class="row" style="padding-top:2%">
-        <div class="col-8 offset-2">
-            @using (Html.BeginForm("EditImage", "Account", FormMethod.Post, new { enctype = "multipart/form-data"}))
+
+    <div class="row" style="padding-top:5%">
+
+        <div class="col-2 offset-2">
+            @using (Html.BeginForm("EditImage", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div class="row">
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("profileId", Model.Id)
+                    <img src="@Model.AvatarPath" class="img-circle center" id="avatarImage" style="width:252px;height:252px" />
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <input name="uploadImage" type="file" id="uploadImage" />
+                    </div>
+                </div>
+                <div class="row text-center" style="padding-top:5%">
+                    <div class="col-12">
+                        <button class="btn btn-outline-success" data-toggle="tooltip" title="We recommend 252x252 for image size!">Update Picture</button>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center">
+                        <h1>@Model.DisplayName's Profile Page</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    @Html.Editor("newDisplayName", Model.DisplayName, new { htmlAttributes = new { @Value = Model.DisplayName, @class = "form-control pull-right", @style = "width:75%" } })
+                </div>
+                <div class="col-6">
+                    <button class="btn btn-outline-success pull-left" style="width:75%">Update Display Name</button>
+                </div>
+            </div>
+            <div class="row" style="padding-top:4%">
+                <div class="col-12">
+                    <div class="text-center">
+                        <h3 class="text-center">About</h3>
+                    </div>
+                </div>
+            </div>
+            @using (Html.BeginForm("EditBio", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
                 @Html.AntiForgeryToken();
                 @Html.Hidden("profileId", Model.Id)
-            <div class="row text-center">
-                <div class="col-3">
-                    <button class="btn btn-outline-success" type="submit" style="width:100%">Save</button>
-                </div>
-            </div>
-            <div class="row text-center" style="padding-top:2%">
-                <div class="col-2">
-                    <input name="uploadImage" type="file" id="uploadImage" />
-                </div>
-            </div>
-            }
-            <div class="row">
-                <div class="col-2">
-                    <img id="avatarImage" src="@Model.AvatarPath" class="img-circle" style="width:200px;height:200px;" />
-                </div>
-                <div class="col-10">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="text-center">
-                                <h1>@Model.DisplayName's Profile Page</h1>
-                            </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="text-center">
+                            <button class="btn btn-outline-success">Update My About Page</button>
                         </div>
                     </div>
-                    @using (Html.BeginForm("EditDisplayName", "Account", FormMethod.Post, new { @placeholder="Display Name",enctype = "multipart/form-data" }))
-                    {
-                        @Html.AntiForgeryToken();
-                        @Html.Hidden("profileId", Model.Id)
-                        <div class="row">
-                            <div class="col-6 offset-2">
-                                @Html.TextBox("newDisplayName", Model.DisplayName, new { @maxlength = "30", @class = "form-control", @placeholder = "Last Name" })
-                                @*@Html.TextBox("newDisplayName", Model.DisplayName, new { htmlAttributes = new { @maxlength = "15", @Value = Model.DisplayName, @class = "form-control" } })*@
-                            </div>
-                            <div class="col-2">
-                                <button type="submit" class="btn btn-outline-success">Save</button>
-                            </div>
-                        </div>
-                    }
-
-                    @using (Html.BeginForm("EditBio", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
-                    {
-                        @Html.AntiForgeryToken();
-                        @Html.Hidden("profileId", Model.Id)
-                        <div class="row" style="padding-top:5%">
-                            <div class="col-7">
-                                <div class="text-right">
-                                    <h3>About Me</h3>
-                                </div>
-                            </div>
-                            <div class="col-2">
-                                <div class="text-center" style="padding-bottom:25%">
-                                    <button class="btn btn-outline-success">Save</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                @Html.TextArea("newBio", Model.Bio, new { @Value=Model.Bio,@class = "mceEditor" })
-                            </div>
-                        </div>
-                    }
                 </div>
-            </div>
-
-            <div class="row text-center" style="padding-top:5%">
-                <div class="col-6">
-                    <h2>Articles</h2>
+                <div class="row" style="padding-top:2%">
+                    <div class="col-12">
+                        @Html.TextArea("newBio", Model.Bio, new { @Value = Model.Bio, @class = "mceEditor" })
+                    </div>
                 </div>
-                <div class="col-6">
-                    <h2>Comments</h2>
-                </div>
-            </div>
-            <div class="row" style="padding-top:2%">
-                <div class="col-6" id="ProfilePosts">
-                    @{Html.RenderAction("ProfilePosts", "BlogPosts", new { id = Model.Id });}
-                </div>
-                <div class="col-6" id="ProfileComments">
-                    @{Html.RenderAction("ProfileComments", "BlogPosts", new { id = Model.Id });}
-                </div>
-            </div>
+            }
         </div>
+
+
     </div>
+
 }
 else
 {
-    <div class="row" style="padding-top:2%">
-        <div class="col-8 offset-2">
+
+    <div class="row" style="padding-top:5%">
+
+        <div class="col-2 offset-2">
             <div class="row">
-                <div class="col-2">
-                    <img id="avatarImage" src="@Model.AvatarPath" class="img-circle" style="width:200px;height:200px;" />
-                </div>
-                <div class="col-10">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="text-center">
-                                <h1>@Model.DisplayName's Profile Page</h1>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row" style="padding-top:5%">
-                        <div class="col-7">
-                            <div class="text-right">
-                                <h3>About Me</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            @Html.Raw(Model.Bio)
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row text-center" style="padding-top:5%">
-                <div class="col-6">
-                    <h2>Articles</h2>
-                </div>
-                <div class="col-6">
-                    <h2>Comments</h2>
-                </div>
-            </div>
-            <div class="row" style="padding-top:2%">
-                <div class="col-6" id="ProfilePosts">
-                    @{Html.RenderAction("ProfilePosts", "BlogPosts", new { id = Model.Id });}
-                </div>
-                <div class="col-6" id="ProfileComments">
-                    @{Html.RenderAction("ProfileComments", "BlogPosts", new { id = Model.Id });}
+                <div class="col-12">
+                    <img src="@Model.AvatarPath" class="img-circle center" id="avatarImage" style="width:240px;height:240px" />
                 </div>
             </div>
         </div>
+        <div class="col-6">
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center">
+                        <h1>@Model.DisplayName's Profile Page</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-top:4%">
+                <div class="col-12">
+                    <div class="text-center">
+                        <h3 class="text-center">About</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-top:2%">
+                <div class="col-12">
+                    @Html.Raw(Model.Bio)
+                </div>
+            </div>
+        </div>
+
+
     </div>
 }
 
+<div class="row text-center" style="padding-top:5%">
+    <div class="col-4 offset-2">
+        <h2>Articles</h2>
+    </div>
+    <div class="col-4">
+        <h2>Comments</h2>
+    </div>
+</div>
+<div class="row" style="padding-top:2%">
+    <div class="col-4 offset-2" id="ProfilePosts">
+        @{Html.RenderAction("ProfilePosts", "BlogPosts", new { id = Model.Id });}
+    </div>
+    <div class="col-4" id="ProfileComments">
+        @{Html.RenderAction("ProfileComments", "BlogPosts", new { id = Model.Id });}
+    </div>
+</div>
 @section Scripts{
 
     <script>

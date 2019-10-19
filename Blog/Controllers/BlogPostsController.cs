@@ -82,6 +82,7 @@ namespace Blog.Controllers
                         blogPost.AuthorId = User.Identity.GetUserId();
                         blogPost.Slug = Slug;
                         blogPost.ViewCount = 0;
+                        blogPost.Reputation = 0;
                         blogPost.CreateDate = DateTime.Now;
                         db.BlogPosts.Add(blogPost);
                         db.SaveChanges();
@@ -153,20 +154,23 @@ namespace Blog.Controllers
 
             if (User.Identity.IsAuthenticated)
             {
-                if (ImageUploadValidator.IsWebFriendlyImage(uploadImage))
-                {
-                    var fileName = DateTime.Now.Ticks + ".png";
-                    var path = Path.Combine(Server.MapPath("~/Uploads/"), fileName);
-                    uploadImage.SaveAs(path);
-                    blogPost.MediaLink = "/Uploads/" + fileName;
-                }
                 BlogPost post = db.BlogPosts.FirstOrDefault(x=>x.Slug==slug);
                 if (post == null) return RedirectToAction("Error", "Home",new { errorText="Invalid post"});
                 if (User.IsInRole("Admin") || User.Identity.GetUserId() == post.AuthorId)
                 {
                     post.Body = blogPost.Body;
                     post.Title = blogPost.Title;
-                    post.MediaLink = blogPost.MediaLink;
+                    if (ImageUploadValidator.IsWebFriendlyImage(uploadImage))
+                    {
+                        var fileName = DateTime.Now.Ticks + ".png";
+                        var path = Path.Combine(Server.MapPath("~/Uploads/"), fileName);
+                        uploadImage.SaveAs(path);
+                        post.MediaLink = "/Uploads/" + fileName;
+                    }
+                    else
+                    {
+                        post.MediaLink = blogPost.MediaLink;
+                    }
                     post.UpdateReason = blogPost.UpdateReason;
                     post.UpdateDate = DateTime.Now;
                     post.Listed = blogPost.Listed;

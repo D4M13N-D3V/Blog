@@ -28,9 +28,9 @@
                 <div class="row" style="padding-top:5%;">
                     <div class="col-12">
                         <ul class="text-uppercase list-inline font-13 font-medium">
-                            @*<li>
+                            <li>
                                 <img class="d-flex mr-3 img-circle" src="@blogPost.Author.AvatarPath" width="60" height="60" alt="Generic placeholder image">
-                            </li>*@
+                            </li>
                             <li>@Html.ActionLink(blogPost.Author.DisplayName, "Profile", "Account", new { id = blogPost.AuthorId }, new { })</li>
                             @if (blogPost.UpdateDate.HasValue)
                             {

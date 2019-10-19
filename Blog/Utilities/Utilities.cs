@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Text;
 using System.Web;
+using System.Security.Cryptography;
 
 namespace Blog.Utilities
 {
@@ -16,7 +17,7 @@ namespace Blog.Utilities
         {
             if (file == null) return false;
 
-            //if (file.ContentLength > 2 * 1024 * 1024 || file.ContentLength < 1024) return false;
+            if (file.ContentLength > 2 * 1024 * 1024 || file.ContentLength < 1024) return false;
 
             try { using (var img = Image.FromStream(file.InputStream)) { return ImageFormat.Jpeg.Equals(img.RawFormat) || ImageFormat.Png.Equals(img.RawFormat) || ImageFormat.Gif.Equals(img.RawFormat); } } catch { return false; }
 
@@ -32,6 +33,33 @@ namespace Blog.Utilities
 
     public class Utilities
     {
+        /// Hashes an email with MD5.  Suitable for use with Gravatar profile
+        /// image urls
+        public static string GetGravatarLinkFromEmail(string email, int size)
+        {
+            // Create a new instance of the MD5CryptoServiceProvider object.  
+            MD5 md5Hasher = MD5.Create();
+
+            // Convert the input string to a byte array and compute the hash.  
+            byte[] data = md5Hasher.ComputeHash(Encoding.Default.GetBytes(email));
+
+            // Create a new Stringbuilder to collect the bytes  
+            // and create a string.  
+            StringBuilder sBuilder = new StringBuilder();
+
+            // Loop through each byte of the hashed data  
+            // and format each one as a hexadecimal string.  
+            for (int i = 0; i < data.Length; i++)
+            {
+                sBuilder.Append(data[i].ToString("x2"));
+            }
+
+            var hash = sBuilder.ToString();
+            var link = string.Format("http://www.gravatar.com/avatar/{0}?{1}", hash,size);
+
+            return link;
+        }
+
         public static string GetBaseUrl()
         {
             var request = HttpContext.Current.Request;

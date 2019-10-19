@@ -41,6 +41,7 @@ namespace Blog.Models
         public string UpdateReason { get; set; }
         public string MediaLink { get; set; }
         public int ViewCount { get; set; }
+        public int Reputation { get; set; }
         public bool Listed { get; set; }
         //Virtual Navigation  ( make sure there are references to the parents and children types and are able to store it )
         public virtual ICollection<Comment> Comments { get; set; }
@@ -50,6 +51,7 @@ namespace Blog.Models
     public class Comment
     {
         public int Id { get; set; }
+        public int ParentID { get; set; }
         public int BlogPostId { get; set; }
         public string AuthorId { get; set; }
         public DateTime CreateDate { get; set; }
@@ -61,6 +63,7 @@ namespace Blog.Models
         //Virtual Navigation  ( make sure there are references to the parents and children types and are able to store it )
         public virtual BlogPost BlogPost { get; set; }
         public virtual ApplicationUser Author { get; set; }
+        public int Reputation { get; set; }
     }
 
     public class UpdateLog
@@ -102,8 +105,6 @@ namespace Blog.Models
     public class Subscription
     {
         public int Id { get; set; }
-        [Required(ErrorMessage = "Your name is required!")]
-        public string Name { get; set; }
 
         [Required(ErrorMessage = "Your email address is required!")]
         public string Email { get; set; }

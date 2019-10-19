@@ -20,12 +20,11 @@ namespace Blog.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Subscription subscription, string subname, string subemail)
+        public ActionResult Create(Subscription subscription, string subemail)
         {
             if (db.Subscriptions.FirstOrDefault(x => x.Email == subemail) != null) return View("Exists");
-            if (subname!= null && subemail != null)
+            if (subemail != null)
             {
-                subscription.Name = subname;
                 subscription.Email = subemail;
                 db.Subscriptions.Add(subscription);
                 db.SaveChanges();

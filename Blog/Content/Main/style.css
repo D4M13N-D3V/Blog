@@ -141,7 +141,12 @@ Preloader
         background-color: transparent;
     }
 }
-
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
 @-moz-keyframes loader-figure {
     0% {
         height: 0;

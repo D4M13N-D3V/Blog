@@ -227,7 +227,7 @@ namespace Blog.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName=model.LastName, DisplayName=model.DisplayName };
+                var user = new ApplicationUser { AvatarPath = Utilities.Utilities.GetGravatarLinkFromEmail(model.Email,60),Reputation=0, UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName=model.LastName, DisplayName=model.DisplayName };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -452,7 +452,7 @@ namespace Blog.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { AvatarPath = Utilities.Utilities.GetGravatarLinkFromEmail(model.Email, 60), UserName = model.Email, Email = model.Email, Reputation = 0 };
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
