@@ -209,6 +209,8 @@ namespace Blog.Controllers
                     post.UpdateReason = blogPost.UpdateReason;
                     post.UpdateDate = DateTime.Now;
                     post.Listed = blogPost.Listed;
+
+
                     db.Entry(post).State = EntityState.Modified;
                     db.SaveChanges();
                     return RedirectToAction("Details", "BlogPosts", new { slug=post.Slug });

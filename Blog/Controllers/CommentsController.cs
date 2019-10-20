@@ -54,6 +54,8 @@ namespace Blog.Controllers
                     updatedComment.Content = comment.Content;
                     updatedComment.UpdateDate = DateTime.Now;
                     updatedComment.UpdateReason = comment.UpdateReason;
+
+
                     db.Entry(updatedComment).State = EntityState.Modified;
                     db.SaveChanges();
                     return RedirectToAction("Details", "BlogPosts", new { slug = updatedComment.BlogPost.Slug });

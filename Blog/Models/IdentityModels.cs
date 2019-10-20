@@ -14,8 +14,6 @@ namespace Blog.Models
         {
             BlogPosts = new HashSet<BlogPost>();
             Comments = new HashSet<Comment>();
-            MuteLogs = new HashSet<MuteLog>();
-            UpdateLogs = new HashSet<UpdateLog>();
         }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -26,8 +24,6 @@ namespace Blog.Models
         public int Reputation { get; set; }
         public virtual ICollection<BlogPost> BlogPosts { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
-        public virtual ICollection<MuteLog> MuteLogs { get; set; }
-        public virtual ICollection<UpdateLog> UpdateLogs { get; set; }
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -51,8 +47,6 @@ namespace Blog.Models
         //Need to add a entry for each Model
         public DbSet<BlogPost> BlogPosts { get; set; }
         public DbSet<Comment> Comments { get; set; }
-        public DbSet<UpdateLog> UpdateLogs { get; set; }
-        public DbSet<MuteLog> MuteLogs { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<ContactRequest> ContactRequests { get; set; }
 
