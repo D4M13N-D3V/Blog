@@ -1,14 +1,13 @@
 ﻿@model Blog.Models.ApplicationUser
 @using Microsoft.AspNet.Identity;
-
+@
 @{
     ViewBag.Title = Model.DisplayName + " Profile";
 }
 
 @if (Model.Id == User.Identity.GetUserId() || User.IsInRole("Admin"))
 {
-
-    <div class="row" style="padding-top:5%">
+    <div class="row" style="padding-top:3%">
 
         <div class="col-2 offset-2">
             @using (Html.BeginForm("EditImage", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
@@ -76,7 +75,18 @@
                 </div>
             }
         </div>
-
+        <div class="col-2">
+            <div class="row" style="padding-top:2%">
+                @if()
+                <button type="button" class="btn btn-outline-red" style="width:75%">Make Admin</button>
+            </div>
+            <div class="row" style="padding-top:2%">
+                <button type="button" class="btn btn-outline-red" style="width:75%">Make Moderator</button>
+            </div>
+            <div class="row" style="padding-top:2%">
+                <button type="button" class="btn btn-outline-red" style="width:75%">Make Writer</button>
+            </div>
+        </div>
 
     </div>
 
